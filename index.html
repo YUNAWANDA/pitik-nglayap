@@ -1,4 +1,124 @@
-<script>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas Game - Pitik Nglayap Nyebrang Jalan (Endless Forest)</title>
+    <style>
+        /* Modern Reset & Vibrant Base Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            user-select: none; /* Mencegah seleksi teks saat cepat me-tap HP */
+            -webkit-user-select: none;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #064e3b 50%, #022c22 100%);
+            background-attachment: fixed;
+            color: #f8fafc;
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        /* Glassmorphism Header Berkilau */
+        header {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(4, 120, 87, 0.4));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: white;
+            text-align: center;
+            padding: 30px 15px;
+            border-bottom: 1px solid rgba(52, 211, 153, 0.3);
+            box-shadow: 0 10px 30px rgba(4, 120, 87, 0.2);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #34d399, #6ee7b7, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            font-weight: 500;
+            color: #a7f3d0;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        /* Neon Glass Arena Container */
+        #game-container {
+            text-align: center;
+            background: rgba(30, 41, 59, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 20px;
+            border-radius: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(52, 211, 153, 0.2);
+            position: relative;
+            touch-action: manipulation;
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border-radius: 16px;
+            max-width: 100%;
+            height: auto;
+            border: 4px solid rgba(52, 211, 153, 0.4);
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.25);
+            cursor: pointer;
+        }
+
+        .btn-instruction {
+            margin-top: 18px;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            font-weight: 500;
+            background: rgba(15, 23, 42, 0.6);
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn-instruction strong {
+            color: #fbbf24;
+            text-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Projek Game: Pitik Nglayap (Endless Forest)</h1>
+        <p>Tugas Besar Pemrograman Perangkat Lunak & Gim (RPL)</p>
+    </header>
+
+    <div class="container">
+        <div id="game-container">
+            <canvas id="gameCanvas" width="750" height="360"></canvas>
+            <div class="btn-instruction">Tekan <strong>TOMBOL SPASI</strong> / <strong>TAP LAYAR GAME</strong> untuk Melompat</div>
+        </div>
+    </div>
+
+    <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -134,7 +254,7 @@
         }
 
         function drawEnvironment() {
-            // 1. Langit Senja Estetik (Gradasi Linear)
+            // 1. Langit Senja
             let skyGrad = ctx.createLinearGradient(0, 0, 0, 150);
             skyGrad.addColorStop(0, '#fdba74');
             skyGrad.addColorStop(0.5, '#f472b6');
@@ -142,7 +262,7 @@
             ctx.fillStyle = skyGrad;
             ctx.fillRect(0, 0, canvas.width, 150);
 
-            // 2. Menggambar Pohon Hutan Pinus
+            // 2. Pohon Pinus
             trees.forEach(tree => {
                 ctx.fillStyle = '#065f46'; 
                 ctx.beginPath();
@@ -159,7 +279,7 @@
                 ctx.fill();
             });
 
-            // Animasi Daun Berguguran
+            // Daun Berguguran
             ctx.fillStyle = 'rgba(52, 211, 153, 0.6)';
             leaves.forEach(leaf => {
                 leaf.y += leaf.speed;
@@ -170,7 +290,7 @@
                 ctx.fill();
             });
 
-            // 3. Semak Belukar Pembatas Atas Jalan
+            // 3. Semak Pembatas
             ctx.fillStyle = '#10b981';
             ctx.fillRect(0, 140, canvas.width, 20);
             
@@ -181,11 +301,11 @@
                 ctx.fill();
             }
 
-            // 4. Badan Aspal Jalan Raya Modern
+            // 4. Aspal Jalan
             ctx.fillStyle = '#334155';
             ctx.fillRect(0, 160, canvas.width, 125);
 
-            // Marka Jalan Tengah Putih Bersih
+            // Marka Jalan
             ctx.strokeStyle = '#f8fafc';
             ctx.lineWidth = 4;
             ctx.setLineDash([30, 20]);
@@ -195,18 +315,18 @@
             ctx.stroke();
             ctx.setLineDash([]);
 
-            // Pembatas Garis Kuning Neon
+            // Garis Kuning
             ctx.fillStyle = '#fbbf24';
             ctx.fillRect(0, 280, canvas.width, 5);
             
-            // Base layer tanah/rumput tua gelap
+            // Rumput Dasar
             let grassGrad = ctx.createLinearGradient(0, 285, 0, canvas.height);
             grassGrad.addColorStop(0, '#059669');
             grassGrad.addColorStop(1, '#064e3b');
             ctx.fillStyle = grassGrad;
             ctx.fillRect(0, 285, canvas.width, 75);
 
-            // LAYER RUMPUT 1: Rimbun Belakang (Warna Hijau Mint Cerah)
+            // Rumput Layer 1
             ctx.fillStyle = '#10b981';
             for (let i = -5; i < canvas.width + 10; i += 8) {
                 let grassHeight = 16 + Math.sin(i * 0.08) * 6; 
@@ -217,7 +337,7 @@
                 ctx.fill();
             }
 
-            // LAYER RUMPUT 2: Rimbun Depan (Warna Hijau Lebih Muda/Pastel)
+            // Rumput Layer 2
             ctx.fillStyle = '#34d399';
             for (let i = -2; i < canvas.width + 10; i += 12) {
                 let grassHeight = 12 + Math.cos(i * 0.1) * 4;
@@ -228,20 +348,9 @@
                 ctx.fill();
             }
 
-            // LAYER RUMPUT 3: Variasi Rumput Liar Panjang Berkelompok
-            ctx.fillStyle = '#6ee7b7';
-            for (let i = 20; i < canvas.width; i += 60) {
-                ctx.beginPath();
-                ctx.moveTo(i, 310); ctx.lineTo(i - 4, 292); ctx.lineTo(i + 2, 310);
-                ctx.moveTo(i + 2, 310); ctx.lineTo(i + 5, 288); ctx.lineTo(i + 8, 310);
-                ctx.fill();
-            }
-
-            // AKSEN TAMBAHAN: Bunga Liar Estetik Kuning Putih Bertebaran
+            // Bunga Liar
             for (let i = 40; i < canvas.width; i += 95) {
                 let flowerY = 315 + Math.sin(i) * 12;
-                
-                // Kelopak Putih
                 ctx.fillStyle = '#ffffff';
                 ctx.beginPath();
                 ctx.arc(i - 3, flowerY, 2.5, 0, Math.PI * 2);
@@ -250,7 +359,6 @@
                 ctx.arc(i, flowerY + 3, 2.5, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Putik Tengah Oranye/Kuning
                 ctx.fillStyle = '#fbbf24';
                 ctx.beginPath();
                 ctx.arc(i, flowerY, 2.2, 0, Math.PI * 2);
@@ -396,7 +504,11 @@
             let hue = Math.max(0, 140 - (currentLevel * 9));
             ctx.fillStyle = `hsl(${hue}, 85%, 45%)`;
             ctx.beginPath();
-            ctx.roundRect(30, 52, 120, 28, 8);
+            if (ctx.roundRect) {
+                ctx.roundRect(30, 52, 120, 28, 8);
+            } else {
+                ctx.rect(30, 52, 120, 28);
+            }
             ctx.fill();
             
             ctx.fillStyle = '#ffffff';
@@ -410,7 +522,7 @@
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 
                 ctx.fillStyle = '#ef4444';
-                ctx.font = 'bold 32px "Plus Jakarta Sans", sans-serif';
+                ctx.font = 'bold 28px "Plus Jakarta Sans", sans-serif';
                 ctx.textAlign = 'center';
                 ctx.fillText('KASIAN, PITIKNYA TERTABRAK! 💥', canvas.width / 2, canvas.height / 2 - 15);
                 
@@ -420,14 +532,14 @@
                 
                 ctx.fillStyle = '#fbbf24';
                 ctx.font = '500 14px "Plus Jakarta Sans", sans-serif';
-                ctx.fillText('Tekan SPASI / KLIK Area Game untuk Mencoba Kembali', canvas.width / 2, canvas.height / 2 + 60);
+                ctx.fillText('Tekan SPASI / TAP Layar untuk Coba Lagi', canvas.width / 2, canvas.height / 2 + 60);
                 ctx.textAlign = 'left';
             }
         }
 
-        // --- PENAMBAHAN KODE KONTROL & START GAME ---
+        // --- ENHANCEMENT CONTROLLER (HP + LAPTOP) --- //
 
-        // Kontrol dengan Tombol Keyboard (Spasi)
+        // 1. Kontrol Tombol Spasi (Keyboard)
         window.addEventListener('keydown', function(e) {
             if (e.code === 'Space') {
                 e.preventDefault();
@@ -435,11 +547,13 @@
             }
         });
 
-        // Kontrol dengan Klik Layar / Touchscreen
-        canvas.addEventListener('click', function() {
+        // 2. Kontrol Klik Mouse & Tap Layar HP (Touchscreen)
+        function handleInteraction(e) {
+            e.preventDefault();
             pitik.jump();
-        });
+        }
 
-        // Memulai Loop Game Pertama Kali
-        loop();
-    </script>
+        canvas.addEventListener('click', handleInteraction);
+        canvas.addEventListener('touchstart', handleInteraction, { passive: false });
+
+        // 3. Jalankan Game Loop Pertama Kali
