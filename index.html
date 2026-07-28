@@ -1,1 +1,574 @@
-test
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pitik Nglayap - The Adventure</title>
+    <!-- Favicon / Logo Canvas kecil -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐔</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #1a1a1a;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
+        }
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas {
+            background: #4a7c59;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+        /* UI Overlays */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.82);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            text-align: center;
+            padding: 20px;
+        }
+        .logo {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #ffca28;
+            text-shadow: 3px 3px 0px #d84315;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        .btn {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #b26a00;
+            transition: all 0.1s ease;
+            margin-top: 15px;
+        }
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #b26a00;
+        }
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px 25px;
+            margin: 15px 0;
+            max-width: 400px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            text-align: left;
+        }
+        .instructions h3 {
+            color: #ffca28;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        /* Joystick Controls for Mobile */
+        #joystick-zone {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            display: none;
+            z-index: 5;
+        }
+        #joystick-knob {
+            position: absolute;
+            top: 35px;
+            left: 35px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 202, 40, 0.8);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        /* Sound Toggle */
+        #sound-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            z-index: 6;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <button id="sound-toggle">🔊 Musik: ON</button>
+
+        <!-- Touch Virtual Joystick -->
+        <div id="joystick-zone">
+            <div id="joystick-knob"></div>
+        </div>
+
+        <!-- Menu Utama -->
+        <div id="start-menu" class="overlay">
+            <div class="logo">🐔 PITIK NGLAYAP</div>
+            <p style="color: #ddd;">Petualangan Ayam Berkelana Mencari Jagung!</p>
+            
+            <div class="instructions">
+                <h3>📖 Cara Bermain</h3>
+                <ul>
+                    <li><b>Keyboard:</b> Gunakan tombol Panah atau WASD.</li>
+                    <li><b>HP/Tablet:</b> Gunakan Virtual Joystick di layar.</li>
+                    <li>🌽 <b>Ambil Jagung:</b> Tambah Skor & XP Level.</li>
+                    <li>🚗 <b>Hindari Rintangan:</b> Mobil, Rubah, & Lubang!</li>
+                </ul>
+            </div>
+
+            <button class="btn" id="start-btn">Mulai Nglayap!</button>
+        </div>
+
+        <!-- Menu Game Over -->
+        <div id="game-over-menu" class="overlay" style="display: none;">
+            <h1 style="color: #e53935; font-size: 2.8rem; margin-bottom: 10px;">PITIK TERTABRAK! 💥</h1>
+            <p id="final-score" style="font-size: 1.4rem; margin-bottom: 5px;">Skor Akhir: 0</p>
+            <p id="final-level" style="font-size: 1.1rem; color: #ffca28;">Level Dicapai: 1</p>
+            <button class="btn" id="restart-btn">Coba Lagi 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Audio System menggunakan Web Audio API (Tanpa file eksternal)
+        let audioCtx = null;
+        let soundEnabled = true;
+        let bgMusicInterval = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(freq, duration, type = 'sine') {
+            if (!soundEnabled || !audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        function startBGM() {
+            if (bgMusicInterval) clearInterval(bgMusicInterval);
+            const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00]; // Nada C D E F G A
+            let step = 0;
+            bgMusicInterval = setInterval(() => {
+                if (gameState === 'PLAYING' && soundEnabled) {
+                    playSound(notes[step % notes.length], 0.15, 'triangle');
+                    step++;
+                }
+            }, 300);
+        }
+
+        // Ukuran Canvas Responsif
+        function resizeCanvas() {
+            const maxWidth = 800;
+            const maxHeight = 600;
+            let w = window.innerWidth;
+            let h = window.innerHeight;
+
+            if (w / h > maxWidth / maxHeight) {
+                w = h * (maxWidth / maxHeight);
+            } else {
+                h = w * (maxHeight / maxWidth);
+            }
+
+            canvas.width = Math.min(w, maxWidth);
+            canvas.height = Math.min(h, maxHeight);
+
+            // Deteksi Layar Sentuh untuk Mengaktifkan Joystick
+            if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+                document.getElementById('joystick-zone').style.display = 'block';
+            }
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Variable Game
+        let gameState = 'MENU'; // MENU, PLAYING, GAMEOVER
+        let score = 0;
+        let level = 1;
+        let cameraY = 0;
+        let keys = {};
+
+        // Player (Pitik / Ayam)
+        const player = {
+            x: 0,
+            y: 0,
+            size: 26,
+            speed: 3.5,
+            direction: 'up',
+            animFrame: 0,
+            frameTimer: 0
+        };
+
+        // Entitas Game
+        let corns = [];
+        let obstacles = [];
+        let environmentDecoration = [];
+
+        // Inisialisasi Level & Peta
+        function initGame() {
+            score = 0;
+            level = 1;
+            cameraY = 0;
+            player.x = canvas.width / 2;
+            player.y = canvas.height - 100;
+            
+            corns = [];
+            obstacles = [];
+            environmentDecoration = [];
+
+            // Buat dekorasi awal (Rumput, Bunga)
+            for (let i = 0; i < 50; i++) {
+                environmentDecoration.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height * 2 - canvas.height,
+                    type: Math.random() > 0.5 ? 'flower' : 'grass'
+                });
+            }
+
+            spawnCorns();
+            spawnObstacles();
+        }
+
+        // Spawn Makanan Jagung
+        function spawnCorns() {
+            while (corns.length < 5 + level) {
+                corns.push({
+                    x: 40 + Math.random() * (canvas.width - 80),
+                    y: player.y - 200 - (Math.random() * 800),
+                    size: 14
+                });
+            }
+        }
+
+        // Spawn Rintangan (Mobil di jalan, Rubah di rumput)
+        function spawnObstacles() {
+            obstacles = [];
+            const rows = 10 + level * 2;
+            for (let i = 0; i < rows; i++) {
+                let posY = player.y - 300 - (i * 120);
+                let type = Math.random() > 0.4 ? 'car' : 'fox';
+                let speed = (2 + Math.random() * 2) * (Math.random() > 0.5 ? 1 : -1) * (1 + level * 0.1);
+
+                obstacles.push({
+                    x: Math.random() * canvas.width,
+                    y: posY,
+                    width: type === 'car' ? 50 : 35,
+                    height: type === 'car' ? 26 : 26,
+                    speed: speed,
+                    type: type,
+                    color: type === 'car' ? ['#e53935', '#1e88e5', '#fdd835'][Math.floor(Math.random() * 3)] : '#d84315'
+                });
+            }
+        }
+
+        // Event Listener Input Keyboard
+        window.addEventListener('keydown', e => keys[e.key.toLowerCase()] = true);
+        window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+
+        // Virtual Joystick Controller
+        const joystickZone = document.getElementById('joystick-zone');
+        const joystickKnob = document.getElementById('joystick-knob');
+        let joystickActive = false;
+        let joystickVector = { x: 0, y: 0 };
+
+        joystickZone.addEventListener('touchstart', handleTouchStart, false);
+        joystickZone.addEventListener('touchmove', handleTouchMove, false);
+        joystickZone.addEventListener('touchend', handleTouchEnd, false);
+
+        function handleTouchStart(e) {
+            joystickActive = true;
+            handleTouchMove(e);
+        }
+
+        function handleTouchMove(e) {
+            if (!joystickActive) return;
+            const rect = joystickZone.getBoundingClientRect();
+            const touch = e.touches[0];
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            let dx = touch.clientX - centerX;
+            let dy = touch.clientY - centerY;
+            const dist = Math.hypot(dx, dy);
+            const maxDist = rect.width / 2;
+
+            if (dist > maxDist) {
+                dx = (dx / dist) * maxDist;
+                dy = (dy / dist) * maxDist;
+            }
+
+            joystickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
+            joystickVector.x = dx / maxDist;
+            joystickVector.y = dy / maxDist;
+        }
+
+        function handleTouchEnd() {
+            joystickActive = false;
+            joystickKnob.style.transform = `translate(0px, 0px)`;
+            joystickVector = { x: 0, y: 0 };
+        }
+
+        // Logic Game Loop
+        function update() {
+            if (gameState !== 'PLAYING') return;
+
+            // Pergerakan Player
+            let moveX = 0;
+            let moveY = 0;
+
+            if (keys['arrowleft'] || keys['a']) moveX -= 1;
+            if (keys['arrowright'] || keys['d']) moveX += 1;
+            if (keys['arrowup'] || keys['w']) moveY -= 1;
+            if (keys['arrowdown'] || keys['s']) moveY += 1;
+
+            if (joystickActive) {
+                moveX = joystickVector.x;
+                moveY = joystickVector.y;
+            }
+
+            // Normalisasi Kecepatan
+            if (moveX !== 0 || moveY !== 0) {
+                const len = Math.hypot(moveX, moveY);
+                player.x += (moveX / (len || 1)) * player.speed;
+                player.y += (moveY / (len || 1)) * player.speed;
+
+                // Animasi Berjalan
+                player.frameTimer++;
+                if (player.frameTimer % 8 === 0) {
+                    player.animFrame = (player.animFrame + 1) % 2;
+                }
+            }
+
+            // Pembatas Layar Vertikal & Horisontal
+            player.x = Math.max(player.size, Math.min(canvas.width - player.size, player.x));
+
+            // Kamera Mengikuti Ayam (Gerak ke Atas)
+            if (player.y < canvas.height / 2 + cameraY) {
+                cameraY = player.y - canvas.height / 2;
+            }
+
+            // Update & Pergerakan Rintangan
+            obstacles.forEach(obs => {
+                obs.x += obs.speed;
+                if (obs.speed > 0 && obs.x > canvas.width + 50) obs.x = -50;
+                if (obs.speed < 0 && obs.x < -50) obs.x = canvas.width + 50;
+
+                // Deteksi Tabrakan (AABB Collision)
+                if (
+                    player.x + player.size / 2 > obs.x &&
+                    player.x - player.size / 2 < obs.x + obs.width &&
+                    player.y + player.size / 2 > obs.y &&
+                    player.y - player.size / 2 < obs.y + obs.height
+                ) {
+                    gameOver();
+                }
+            });
+
+            // Deteksi Makan Jagung
+            corns.forEach((corn, index) => {
+                const dist = Math.hypot(player.x - corn.x, player.y - corn.y);
+                if (dist < player.size / 2 + corn.size) {
+                    corns.splice(index, 1);
+                    score += 10;
+                    playSound(587.33, 0.1, 'sine'); // Nada makan jagung
+
+                    // Naik Level
+                    if (score % 50 === 0) {
+                        level++;
+                        playSound(880, 0.3, 'square'); // Sound level up
+                        spawnObstacles();
+                    }
+                    spawnCorns();
+                }
+            });
+        }
+
+        // Functions Menggambar Visual Canvas (Sprite Realistis Manual)
+        function drawPlayer() {
+            ctx.save();
+            ctx.translate(player.x, player.y - cameraY);
+
+            // Bayangan Ayam
+            ctx.fillStyle = 'rgba(0,0,0,0.25)';
+            ctx.beginPath();
+            ctx.ellipse(0, 12, 14, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Badan Utama Ayam
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 14, 16, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Sayap (Animasi Kepak)
+            ctx.fillStyle = '#f5f5f5';
+            let wingOffset = player.animFrame * 2;
+            ctx.beginPath();
+            ctx.ellipse(-10 - wingOffset, 0, 5, 9, Math.PI / 6, 0, Math.PI * 2);
+            ctx.ellipse(10 + wingOffset, 0, 5, 9, -Math.PI / 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Jengger Merah (Jengger Ayam)
+            ctx.fillStyle = '#d32f2f';
+            ctx.beginPath();
+            ctx.arc(0, -15, 4, 0, Math.PI * 2);
+            ctx.arc(-3, -13, 3, 0, Math.PI * 2);
+            ctx.arc(3, -13, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Paruh Kuning
+            ctx.fillStyle = '#ffa000';
+            ctx.beginPath();
+            ctx.moveTo(-3, -8);
+            ctx.lineTo(3, -8);
+            ctx.lineTo(0, -3);
+            ctx.closePath();
+            ctx.fill();
+
+            // Mata
+            ctx.fillStyle = '#212121';
+            ctx.beginPath();
+            ctx.arc(-4, -10, 2, 0, Math.PI * 2);
+            ctx.arc(4, -10, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function drawObstacles() {
+            obstacles.forEach(obs => {
+                let drawY = obs.y - cameraY;
+                if (drawY < -100 || drawY > canvas.height + 100) return; // Culling
+
+                ctx.save();
+                if (obs.type === 'car') {
+                    // Bayangan Mobil
+                    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+                    ctx.fillRect(obs.x + 3, drawY + 3, obs.width, obs.height);
+
+                    // Badan Mobil
+                    ctx.fillStyle = obs.color;
+                    ctx.beginPath();
+                    ctx.roundRect(obs.x, drawY, obs.width, obs.height, 6);
+                    ctx.fill();
+
+                    // Kaca Mobil
+                    ctx.fillStyle = '#b0bec5';
+                    ctx.fillRect(obs.x + 10, drawY + 4, obs.width - 20, obs.height - 8);
+
+                    // Roda
+                    ctx.fillStyle = '#212121';
+                    ctx.fillRect(obs.x + 6, drawY - 2, 8, 3);
+                    ctx.fillRect(obs.x + obs.width - 14, drawY - 2, 8, 3);
+                    ctx.fillRect(obs.x + 6, drawY + obs.height - 1, 8, 3);
+                    ctx.fillRect(obs.x + obs.width - 14, drawY + obs.height - 1, 8, 3);
+                } else {
+                    // Rubah / Musang
+                    ctx.fillStyle = obs.color;
+                    ctx.beginPath();
+                    ctx.ellipse(obs.x + obs.width / 2, drawY + obs.height / 2, obs.width / 2, obs.height / 3, 0, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Telinga Rubah
+                    ctx.fillStyle = '#bf360c';
+                    ctx.beginPath();
+                    ctx.moveTo(obs.x + 5, drawY);
+                    ctx.lineTo(obs.x + 12, drawY + 8);
+                    ctx.lineTo(obs.x + 2, drawY + 8);
+                    ctx.fill();
+                }
+                ctx.restore();
+            });
+        }
+
+        function drawCorns() {
+            corns.forEach(corn => {
+                let drawY = corn.y - cameraY;
+                ctx.save();
+                // Batang Hijau Jagung
+                ctx.fillStyle = '#388e3c';
+                ctx.beginPath();
+                ctx.ellipse(corn.x, drawY + 3, 3, 8, Math.PI / 4, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Biji Jagung Kuning
+                ctx.fillStyle = '#fbc02d';
+                ctx.beginPath();
+                ctx.ellipse(corn.x, drawY, 6, 10, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Detail Kilau
+                ctx.fillStyle = '#fff9c4';
+                ctx.beginPath();
+                ctx.arc(corn.x - 2, drawY - 3, 2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+        }
+
+        function drawBackground() {
+            // Latar Belakang Rumput
+            ctx.fillStyle = '#4a7c59';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Visual Jalan Raya Bertahap
+            ctx.fillStyle = '#37474f';
+            obstacles.forEach(obs => {
+                if (obs.type === 'c
