@@ -1,119 +1,4 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tugas Game - Pitik Nglayap Nyebrang Jalan (Endless Forest)</title>
-    <style>
-        /* Modern Reset & Vibrant Base Styling */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #0f172a 0%, #064e3b 50%, #022c22 100%);
-            background-attachment: fixed;
-            color: #f8fafc;
-            line-height: 1.6;
-            padding-bottom: 60px;
-        }
-
-        /* Glassmorphism Header Berkilau */
-        header {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(4, 120, 87, 0.4));
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            color: white;
-            text-align: center;
-            padding: 50px 20px;
-            border-bottom: 1px solid rgba(52, 211, 153, 0.3);
-            box-shadow: 0 10px 30px rgba(4, 120, 87, 0.2);
-        }
-
-        header h1 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            margin-bottom: 10px;
-            background: linear-gradient(to right, #34d399, #6ee7b7, #fbbf24);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            font-weight: 500;
-            color: #a7f3d0;
-        }
-
-        .container {
-            max-width: 950px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        /* Neon Glass Arena Container */
-        #game-container {
-            text-align: center;
-            background: rgba(30, 41, 59, 0.45);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            padding: 30px;
-            border-radius: 24px;
-            margin-bottom: 40px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(52, 211, 153, 0.2);
-            position: relative;
-        }
-
-        canvas {
-            display: block;
-            margin: 0 auto;
-            border-radius: 16px;
-            max-width: 100%;
-            border: 4px solid rgba(52, 211, 153, 0.4);
-            box-shadow: 0 0 30px rgba(16, 185, 129, 0.25);
-        }
-
-        .btn-instruction {
-            margin-top: 22px;
-            color: #cbd5e1;
-            font-size: 1rem;
-            font-weight: 500;
-            background: rgba(15, 23, 42, 0.6);
-            display: inline-block;
-            padding: 10px 24px;
-            border-radius: 30px;
-            border: 1px solid rgba(251, 191, 36, 0.3);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        .btn-instruction strong {
-            color: #fbbf24;
-            text-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
-        }
-    </style>
-</head>
-<body>
-
-    <header>
-        <h1>Projek Game: Pitik Nglayap (Endless Forest)</h1>
-        <p>Tugas Besar Pemrograman Perangkat Lunak & Gim (RPL)</p>
-    </header>
-
-    <div class="container">
-        <div id="game-container">
-            <canvas id="gameCanvas" width="750" height="360"></canvas>
-            <div class="btn-instruction">Tekan <strong>TOMBOL SPASI</strong> atau <strong>KLIK AREA GAME</strong> untuk Melompat Menyebrang Jalan</div>
-        </div>
-    </div>
-
-    <script>
+<script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -540,8 +425,21 @@
             }
         }
 
+        // --- PENAMBAHAN KODE KONTROL & START GAME ---
+
+        // Kontrol dengan Tombol Keyboard (Spasi)
         window.addEventListener('keydown', function(e) {
             if (e.code === 'Space') {
                 e.preventDefault();
                 pitik.jump();
-         
+            }
+        });
+
+        // Kontrol dengan Klik Layar / Touchscreen
+        canvas.addEventListener('click', function() {
+            pitik.jump();
+        });
+
+        // Memulai Loop Game Pertama Kali
+        loop();
+    </script>
