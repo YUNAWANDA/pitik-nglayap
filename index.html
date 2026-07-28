@@ -2,558 +2,577 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tugas Game - Pitik Nglayap Nyebrang Jalan (Endless Forest)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ayam Makan Cacing - Game Seru GitHub Pages</title>
     <style>
-        /* Modern Reset & Vibrant Base Styling */
+        /* Modern Reset & Dynamic Styling */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            user-select: none; /* Mencegah seleksi teks saat cepat me-tap HP */
+            font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
+            user-select: none;
             -webkit-user-select: none;
+            touch-action: manipulation;
         }
 
         body {
             background: linear-gradient(135deg, #0f172a 0%, #064e3b 50%, #022c22 100%);
             background-attachment: fixed;
             color: #f8fafc;
-            line-height: 1.6;
-            padding-bottom: 60px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
         }
 
-        /* Glassmorphism Header Berkilau */
+        /* HEADER & BRANDING LOGO */
         header {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(4, 120, 87, 0.4));
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            color: white;
             text-align: center;
-            padding: 30px 15px;
-            border-bottom: 1px solid rgba(52, 211, 153, 0.3);
-            box-shadow: 0 10px 30px rgba(4, 120, 87, 0.2);
+            margin-bottom: 15px;
+            width: 100%;
+            max-width: 600px;
         }
 
-        header h1 {
-            font-size: 2rem;
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            background: rgba(30, 41, 59, 0.65);
+            backdrop-filter: blur(12px);
+            padding: 12px 24px;
+            border-radius: 20px;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+        }
+
+        .logo-svg {
+            width: 50px;
+            height: 50px;
+            filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.6));
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
             font-weight: 800;
-            letter-spacing: -0.5px;
-            margin-bottom: 8px;
-            background: linear-gradient(to right, #34d399, #6ee7b7, #fbbf24);
+            background: linear-gradient(to right, #fbbf24, #f59e0b, #34d399);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        header p {
-            font-size: 0.95rem;
-            opacity: 0.9;
-            font-weight: 500;
+        .logo-text p {
+            font-size: 0.75rem;
             color: #a7f3d0;
+            font-weight: 600;
         }
 
-        .container {
-            max-width: 950px;
-            margin: 20px auto;
-            padding: 0 15px;
-        }
-
-        /* Neon Glass Arena Container */
-        #game-container {
-            text-align: center;
-            background: rgba(30, 41, 59, 0.45);
+        /* GAME BOARD CONTAINER */
+        #game-wrapper {
+            background: rgba(15, 23, 42, 0.8);
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            padding: 20px;
             border-radius: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(52, 211, 153, 0.2);
-            position: relative;
-            touch-action: manipulation;
+            padding: 15px;
+            border: 2px solid rgba(52, 211, 153, 0.25);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
+        /* HUD PANEL (SKOR, LEVEL, SOUND) */
+        .hud-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 12px;
+            padding: 8px 15px;
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .hud-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .hud-label {
+            font-size: 0.65rem;
+            color: #fbbf24;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .hud-value {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .sound-btn {
+            background: rgba(251, 191, 36, 0.2);
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            color: #fbbf24;
+            padding: 6px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .sound-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* CANVAS STYLING */
         canvas {
-            display: block;
-            margin: 0 auto;
+            background: #0d2818;
             border-radius: 16px;
-            max-width: 100%;
-            height: auto;
-            border: 4px solid rgba(52, 211, 153, 0.4);
-            box-shadow: 0 0 30px rgba(16, 185, 129, 0.25);
+            width: 100%;
+            max-width: 440px;
+            aspect-ratio: 1 / 1;
+            border: 3px solid rgba(52, 211, 153, 0.4);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+            display: block;
             cursor: pointer;
         }
 
-        .btn-instruction {
-            margin-top: 18px;
-            color: #cbd5e1;
-            font-size: 0.9rem;
-            font-weight: 500;
-            background: rgba(15, 23, 42, 0.6);
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 30px;
-            border: 1px solid rgba(251, 191, 36, 0.3);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        /* JOYSTICK CONTROL (MOBILE & LAPTOP) */
+        .joystick-container {
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: repeat(3, 55px);
+            grid-template-rows: repeat(3, 55px);
+            gap: 8px;
+            justify-content: center;
         }
 
-        .btn-instruction strong {
+        .joy-btn {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9));
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            border-radius: 16px;
             color: #fbbf24;
-            text-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
+            font-size: 1.4rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: background 0.1s, transform 0.1s;
+        }
+
+        .joy-btn:active {
+            background: #fbbf24;
+            color: #0f172a;
+            transform: scale(0.92);
+        }
+
+        .joy-up { grid-column: 2; grid-row: 1; }
+        .joy-left { grid-column: 1; grid-row: 2; }
+        .joy-right { grid-column: 3; grid-row: 2; }
+        .joy-down { grid-column: 2; grid-row: 3; }
+
+        /* CARA BERMAIN SECTION */
+        .instructions {
+            margin-top: 20px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 16px;
+            padding: 15px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .instructions h3 {
+            color: #fbbf24;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .instructions ul {
+            list-style: none;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .instructions li::before {
+            content: "• ";
+            color: #fbbf24;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
+    <!-- LOGO HEADER -->
     <header>
-        <h1>Projek Game: Pitik Nglayap (Endless Forest)</h1>
-        <p>Tugas Besar Pemrograman Perangkat Lunak & Gim (RPL)</p>
+        <div class="logo-container">
+            <!-- Logo Vektor Ayam & Cacing -->
+            <svg class="logo-svg" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="#065f46" stroke="#fbbf24" stroke-width="4"/>
+                <!-- Kepala Ayam -->
+                <circle cx="45" cy="45" r="18" fill="#fbbf24"/>
+                <!-- Jengger Merah -->
+                <circle cx="40" cy="24" r="5" fill="#dc2626"/>
+                <circle cx="48" cy="24" r="5" fill="#dc2626"/>
+                <!-- Paruh Oranye -->
+                <polygon points="58,42 72,48 58,54" fill="#f97316"/>
+                <!-- Mata -->
+                <circle cx="50" cy="40" r="3" fill="#0f172a"/>
+                <!-- Cacing di Paruh -->
+                <path d="M 68 50 Q 78 58 72 68" fill="none" stroke="#f472b6" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+            <div class="logo-text">
+                <h1>Ayam Makan Cacing</h1>
+                <p>Game Petualangan Kebun (GitHub Pages)</p>
+            </div>
+        </div>
     </header>
 
-    <div class="container">
-        <div id="game-container">
-            <canvas id="gameCanvas" width="750" height="360"></canvas>
-            <div class="btn-instruction">Tekan <strong>TOMBOL SPASI</strong> / <strong>TAP LAYAR GAME</strong> untuk Melompat</div>
+    <!-- GAME WRAPPER -->
+    <div id="game-wrapper">
+        <div class="hud-panel">
+            <div class="hud-item">
+                <span class="hud-label">Skor</span>
+                <span id="score-val" class="hud-value">0</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">Level</span>
+                <span id="level-val" class="hud-value">1</span>
+            </div>
+            <button id="audio-toggle" class="sound-btn">🔊 Suara: ON</button>
         </div>
+
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+        <!-- JOYSTICK VIRTUAL -->
+        <div class="joystick-container">
+            <button class="joy-btn joy-up" onclick="setDirection('UP')">▲</button>
+            <button class="joy-btn joy-left" onclick="setDirection('LEFT')">◄</button>
+            <button class="joy-btn joy-right" onclick="setDirection('RIGHT')">►</button>
+            <button class="joy-btn joy-down" onclick="setDirection('DOWN')">▼</button>
+        </div>
+    </div>
+
+    <!-- INTRUKSI CARA BERMAIN -->
+    <div class="instructions">
+        <h3>📖 Cara Bermain</h3>
+        <ul>
+            <li>Gunakan <b>Panah Keyboard (W,A,S,D)</b> atau <b>Joystick Virtual</b> untuk mengendalikan Ayam.</li>
+            <li>Kejar dan **Makan Cacing Merah Muda** yang muncul di kebun untuk menambah skor.</li>
+            <li>Hindari menabrak **Jebakan Ayam / Batu (Rintangan Merah)** dan pagar pembatas!</li>
+            <li>Setiap **50 Skor**, kamu akan **Naik Level**. Gerak cacing lebih lincah dan rintangan bertambah banyak!</li>
+        </ul>
     </div>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        let gameActive = true;
+        const scoreEl = document.getElementById('score-val');
+        const levelEl = document.getElementById('level-val');
+        const audioBtn = document.getElementById('audio-toggle');
+
+        const gridSize = 20;
+        const tileCount = canvas.width / gridSize;
+
+        // Player (Ayam)
+        let chicken = { x: 10, y: 10 };
+        let velocity = { x: 0, y: 0 };
+        
+        // Target (Cacing)
+        let worm = { x: 5, y: 5, animFrame: 0 };
+        let obstacles = [];
+
         let score = 0;
-        let currentLevel = 1;
-        let baseSpeed = 4.8;
-        let vehicleSpeed = 4.8;
-        let spawnTimer = 0;
-        let wheelAngle = 0; 
+        let level = 1;
+        let speed = 120;
+        let gameActive = false;
+        let gameInterval = null;
+        let soundEnabled = true;
 
-        // Efek Atmosfer Daun Berguguran
-        let leaves = [];
-        for(let i=0; i<15; i++) {
-            leaves.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * 140,
-                size: Math.random() * 4 + 2,
-                speed: Math.random() * 0.5 + 0.3,
-                wobble: Math.random() * 2
-            });
+        // WEB AUDIO SYNTHESIZER (Efek Suara Internal)
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioContext();
         }
 
-        const pitik = {
-            x: 80,
-            y: 250, 
-            width: 36,
-            height: 36,
-            gravity: 0.65,
-            lift: -12.5,
-            velocity: 0,
-            groundY: 250,
-            jump: function() {
-                if (this.y === this.groundY && gameActive) {
-                    this.velocity = this.lift;
-                }
-                if (!gameActive) {
-                    resetGame();
-                }
-            },
-            update: function() {
-                this.velocity += this.gravity;
-                this.y += this.velocity;
-
-                if (this.y > this.groundY) {
-                    this.y = this.groundY;
-                    this.velocity = 0;
-                }
-            },
-            draw: function() {
-                // Kaki Ayam Emas
-                ctx.strokeStyle = '#f59e0b';
-                ctx.lineWidth = 3;
-                ctx.beginPath();
-                ctx.moveTo(this.x + 12, this.y + 25);
-                ctx.lineTo(this.x + 12, this.y + 36);
-                ctx.moveTo(this.x + 24, this.y + 25);
-                ctx.lineTo(this.x + 24, this.y + 36);
-                ctx.stroke();
-
-                // Bulu Ekor Belakang
-                ctx.fillStyle = '#d97706';
-                ctx.beginPath();
-                ctx.moveTo(this.x + 4, this.y + 16);
-                ctx.quadraticCurveTo(this.x - 6, this.y + 2, this.x + 6, this.y + 8);
-                ctx.fill();
-
-                // Badan Utama
-                ctx.fillStyle = '#fbbf24';
-                ctx.beginPath();
-                ctx.arc(this.x + 16, this.y + 16, 14, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Sayap Ayam
-                ctx.fillStyle = '#f59e0b';
-                ctx.beginPath();
-                ctx.ellipse(this.x + 12, this.y + 18, 8, 5, Math.PI/6, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Leher & Kepala
-                ctx.fillStyle = '#fbbf24';
-                ctx.beginPath();
-                ctx.arc(this.x + 28, this.y + 6, 9, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Jengger Merah Menyala
-                ctx.fillStyle = '#dc2626';
-                ctx.beginPath();
-                ctx.arc(this.x + 25, this.y - 4, 3.5, 0, Math.PI * 2);
-                ctx.arc(this.x + 30, this.y - 3, 3.5, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Paruh Oranye
-                ctx.fillStyle = '#f97316';
-                ctx.beginPath();
-                ctx.moveTo(this.x + 35, this.y + 4);
-                ctx.lineTo(this.x + 43, this.y + 8);
-                ctx.lineTo(this.x + 35, this.y + 12);
-                ctx.fill();
-
-                // Mata
-                ctx.fillStyle = '#0f172a';
-                ctx.beginPath();
-                ctx.arc(this.x + 30, this.y + 4, 2.5, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        };
-
-        let vehicles = [];
-        const vehicleTypes = [
-            { type: 'sedan', width: 85, height: 35, color: '#ff0055' },
-            { type: 'truck', width: 115, height: 55, color: '#00b4d8' },
-            { type: 'motor', width: 48, height: 32, color: '#ffb703' }
-        ];
-
-        const trees = [
-            { x: 40, size: 55 }, { x: 130, size: 75 }, { x: 240, size: 50 },
-            { x: 340, size: 70 }, { x: 470, size: 80 }, { x: 590, size: 55 },
-            { x: 700, size: 65 }
-        ];
-
-        function spawnVehicle() {
-            let randomType = vehicleTypes[Math.floor(Math.random() * vehicleTypes.length)];
-            vehicles.push({
-                x: canvas.width,
-                y: 286 - randomType.height,
-                width: randomType.width,
-                height: randomType.height,
-                color: randomType.color,
-                type: randomType.type,
-                speed: vehicleSpeed
-            });
+        function playSound(freq, type, duration) {
+            if (!soundEnabled || !audioCtx) return;
+            try {
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
         }
 
-        function drawEnvironment() {
-            // 1. Langit Senja
-            let skyGrad = ctx.createLinearGradient(0, 0, 0, 150);
-            skyGrad.addColorStop(0, '#fdba74');
-            skyGrad.addColorStop(0.5, '#f472b6');
-            skyGrad.addColorStop(1, '#38bdf8');
-            ctx.fillStyle = skyGrad;
-            ctx.fillRect(0, 0, canvas.width, 150);
+        // Suara Kluk-Kluk Ayam saat Makan
+        function playChickenEatSound() {
+            if (!soundEnabled || !audioCtx) return;
+            playSound(450, 'sine', 0.08);
+            setTimeout(() => playSound(650, 'triangle', 0.12), 60);
+        }
 
-            // 2. Pohon Pinus
-            trees.forEach(tree => {
-                ctx.fillStyle = '#065f46'; 
-                ctx.beginPath();
-                ctx.moveTo(tree.x, 150 - tree.size);
-                ctx.lineTo(tree.x - (tree.size * 0.45), 150);
-                ctx.lineTo(tree.x + (tree.size * 0.45), 150);
-                ctx.fill();
+        audioBtn.addEventListener('click', () => {
+            initAudio();
+            soundEnabled = !soundEnabled;
+            audioBtn.innerText = soundEnabled ? '🔊 Suara: ON' : '🔇 Suara: OFF';
+        });
 
-                ctx.fillStyle = '#059669'; 
-                ctx.beginPath();
-                ctx.moveTo(tree.x, 150 - (tree.size * 0.75));
-                ctx.lineTo(tree.x - (tree.size * 0.35), 150);
-                ctx.lineTo(tree.x + (tree.size * 0.35), 150);
-                ctx.fill();
-            });
-
-            // Daun Berguguran
-            ctx.fillStyle = 'rgba(52, 211, 153, 0.6)';
-            leaves.forEach(leaf => {
-                leaf.y += leaf.speed;
-                leaf.x += Math.sin(leaf.y * 0.05) * 0.3;
-                if(leaf.y > 140) leaf.y = 0;
-                ctx.beginPath();
-                ctx.arc(leaf.x, leaf.y, leaf.size, 0, Math.PI * 2);
-                ctx.fill();
-            });
-
-            // 3. Semak Pembatas
-            ctx.fillStyle = '#10b981';
-            ctx.fillRect(0, 140, canvas.width, 20);
-            
-            ctx.fillStyle = '#34d399';
-            for(let i = -10; i < canvas.width + 20; i += 40) {
-                ctx.beginPath();
-                ctx.arc(i + 15, 145, 10, 0, Math.PI, true);
-                ctx.fill();
-            }
-
-            // 4. Aspal Jalan
-            ctx.fillStyle = '#334155';
-            ctx.fillRect(0, 160, canvas.width, 125);
-
-            // Marka Jalan
-            ctx.strokeStyle = '#f8fafc';
-            ctx.lineWidth = 4;
-            ctx.setLineDash([30, 20]);
-            ctx.beginPath();
-            ctx.moveTo(0, 220);
-            ctx.lineTo(canvas.width, 220);
-            ctx.stroke();
-            ctx.setLineDash([]);
-
-            // Garis Kuning
-            ctx.fillStyle = '#fbbf24';
-            ctx.fillRect(0, 280, canvas.width, 5);
-            
-            // Rumput Dasar
-            let grassGrad = ctx.createLinearGradient(0, 285, 0, canvas.height);
-            grassGrad.addColorStop(0, '#059669');
-            grassGrad.addColorStop(1, '#064e3b');
-            ctx.fillStyle = grassGrad;
-            ctx.fillRect(0, 285, canvas.width, 75);
-
-            // Rumput Layer 1
-            ctx.fillStyle = '#10b981';
-            for (let i = -5; i < canvas.width + 10; i += 8) {
-                let grassHeight = 16 + Math.sin(i * 0.08) * 6; 
-                ctx.beginPath();
-                ctx.moveTo(i, 285);
-                ctx.lineTo(i + 5, 285 - grassHeight);
-                ctx.lineTo(i + 10, 285);
-                ctx.fill();
-            }
-
-            // Rumput Layer 2
-            ctx.fillStyle = '#34d399';
-            for (let i = -2; i < canvas.width + 10; i += 12) {
-                let grassHeight = 12 + Math.cos(i * 0.1) * 4;
-                ctx.beginPath();
-                ctx.moveTo(i, 287);
-                ctx.lineTo(i + 6, 287 - grassHeight);
-                ctx.lineTo(i + 12, 287);
-                ctx.fill();
-            }
-
-            // Bunga Liar
-            for (let i = 40; i < canvas.width; i += 95) {
-                let flowerY = 315 + Math.sin(i) * 12;
-                ctx.fillStyle = '#ffffff';
-                ctx.beginPath();
-                ctx.arc(i - 3, flowerY, 2.5, 0, Math.PI * 2);
-                ctx.arc(i + 3, flowerY, 2.5, 0, Math.PI * 2);
-                ctx.arc(i, flowerY - 3, 2.5, 0, Math.PI * 2);
-                ctx.arc(i, flowerY + 3, 2.5, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.fillStyle = '#fbbf24';
-                ctx.beginPath();
-                ctx.arc(i, flowerY, 2.2, 0, Math.PI * 2);
-                ctx.fill();
+        // GENERATE RINTANGAN (JEBAKAN/BATU)
+        function generateObstacles() {
+            obstacles = [];
+            let count = (level - 1) * 3 + 2; 
+            for (let i = 0; i < count; i++) {
+                let obsX, obsY;
+                do {
+                    obsX = Math.floor(Math.random() * tileCount);
+                    obsY = Math.floor(Math.random() * tileCount);
+                } while (
+                    (obsX === chicken.x && obsY === chicken.y) || 
+                    (obsX === worm.x && obsY === worm.y)
+                );
+                obstacles.push({ x: obsX, y: obsY });
             }
         }
 
-        function drawWheel(x, y, radius, angle) {
-            ctx.save();
-            ctx.translate(x, y);
-            ctx.rotate(angle);
-            ctx.fillStyle = '#0f172a';
-            ctx.beginPath();
-            ctx.arc(0, 0, radius, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = '#e2e8f0';
-            ctx.beginPath();
-            ctx.arc(0, 0, radius * 0.45, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = '#94a3b8';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(-radius, 0); ctx.lineTo(radius, 0);
-            ctx.moveTo(0, -radius); ctx.lineTo(0, radius);
-            ctx.stroke();
-            ctx.restore();
+        // SPAWN CACING
+        function spawnWorm() {
+            let wormX, wormY;
+            do {
+                wormX = Math.floor(Math.random() * tileCount);
+                wormY = Math.floor(Math.random() * tileCount);
+            } while (
+                (wormX === chicken.x && wormY === chicken.y) ||
+                obstacles.some(obs => obs.x === wormX && obs.y === wormY)
+            );
+
+            worm = { x: wormX, y: wormY, animFrame: 0 };
         }
 
-        function checkCollision(rect1, rect2) {
-            const paddingX = 8;
-            const paddingY = 5;
-            return rect1.x < rect2.x + rect2.width - paddingX &&
-                   rect1.x + rect1.width > rect2.x + paddingX &&
-                   rect1.y < rect2.y + rect2.height - paddingY &&
-                   rect1.y + rect1.height > rect2.y + paddingY;
+        // KONTROL ARAH
+        function setDirection(dir) {
+            initAudio();
+            if (!gameActive) startGame();
+
+            if (dir === 'UP' && velocity.y === 0) { velocity = { x: 0, y: -1 }; }
+            if (dir === 'DOWN' && velocity.y === 0) { velocity = { x: 0, y: 1 }; }
+            if (dir === 'LEFT' && velocity.x === 0) { velocity = { x: -1, y: 0 }; }
+            if (dir === 'RIGHT' && velocity.x === 0) { velocity = { x: 1, y: 0 }; }
         }
 
-        function updateLevelSystem() {
-            currentLevel = Math.floor(score / 10) + 1;
-            vehicleSpeed = baseSpeed + (currentLevel - 1) * 0.75;
-        }
+        window.addEventListener('keydown', e => {
+            switch (e.key) {
+                case 'ArrowUp': case 'w': case 'W': setDirection('UP'); break;
+                case 'ArrowDown': case 's': case 'S': setDirection('DOWN'); break;
+                case 'ArrowLeft': case 'a': case 'A': setDirection('LEFT'); break;
+                case 'ArrowRight': case 'd': case 'D': setDirection('RIGHT'); break;
+            }
+        });
 
-        function resetGame() {
-            vehicles = [];
-            score = 0;
-            currentLevel = 1;
-            vehicleSpeed = baseSpeed;
-            gameActive = true;
-            loop();
-        }
-
-        function loop() {
+        // UPDATE GAME STATE
+        function update() {
             if (!gameActive) return;
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawEnvironment();
+            // Gerakkan Ayam
+            chicken.x += velocity.x;
+            chicken.y += velocity.y;
 
-            pitik.update();
-            pitik.draw();
-
-            updateLevelSystem();
-            wheelAngle -= 0.18;
-
-            spawnTimer++;
-            let dynamicInterval = Math.max(45, 90 - (currentLevel * 4));
-            if (spawnTimer > Math.random() * (dynamicInterval + 30) + dynamicInterval) {
-                spawnVehicle();
-                spawnTimer = 0;
+            // Tabrak Pagar/Tembok Kebun
+            if (chicken.x < 0 || chicken.x >= tileCount || chicken.y < 0 || chicken.y >= tileCount) {
+                return gameOver();
             }
 
-            for (let i = vehicles.length - 1; i >= 0; i--) {
-                let v = vehicles[i];
-                v.x -= v.speed;
+            // Tabrak Rintangan (Jebakan Merah)
+            if (obstacles.some(obs => obs.x === chicken.x && obs.y === chicken.y)) {
+                return gameOver();
+            }
 
-                ctx.fillStyle = v.color;
+            // Ayam Makan Cacing
+            if (chicken.x === worm.x && chicken.y === worm.y) {
+                score += 10;
+                scoreEl.innerText = score;
+                playChickenEatSound();
 
-                if (v.type === 'sedan') {
-                    ctx.fillRect(v.x, v.y + 12, v.width, v.height - 12);
-                    ctx.beginPath();
-                    ctx.moveTo(v.x + 15, v.y + 12);
-                    ctx.lineTo(v.x + 32, v.y);
-                    ctx.lineTo(v.x + 65, v.y);
-                    ctx.lineTo(v.x + 76, v.y + 12);
-                    ctx.fill();
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
-                    ctx.fillRect(v.x + 35, v.y + 3, 25, 7);
-                    ctx.fillStyle = '#ffea00';
-                    ctx.fillRect(v.x, v.y + 16, 6, 7);
-
-                    drawWheel(v.x + 18, v.y + v.height - 2, 8.5, wheelAngle);
-                    drawWheel(v.x + v.width - 18, v.y + v.height - 2, 8.5, wheelAngle);
-
-                } else if (v.type === 'truck') {
-                    ctx.fillStyle = '#f1f5f9';
-                    ctx.fillRect(v.x + 35, v.y, v.width - 35, v.height - 4);
-                    ctx.fillStyle = 'rgba(52, 211, 153, 0.2)';
-                    ctx.fillRect(v.x + 40, v.y + 5, v.width - 45, v.height - 15);
-
-                    ctx.fillStyle = v.color;
-                    ctx.fillRect(v.x, v.y + 12, 35, v.height - 16);
-                    ctx.fillStyle = 'rgba(30, 41, 59, 0.7)';
-                    ctx.fillRect(v.x + 2, v.y + 16, 16, 12);
-                    ctx.fillStyle = '#e11d48';
-                    ctx.fillRect(v.x + v.width - 5, v.y + v.height - 15, 5, 8);
-
-                    drawWheel(v.x + 16, v.y + v.height - 4, 11, wheelAngle);
-                    drawWheel(v.x + v.width - 38, v.y + v.height - 4, 11, wheelAngle);
-                    drawWheel(v.x + v.width - 16, v.y + v.height - 4, 11, wheelAngle);
-
-                } else if (v.type === 'motor') {
-                    ctx.beginPath();
-                    ctx.moveTo(v.x, v.y + 8); 
-                    ctx.lineTo(v.x + 15, v.y + 15); 
-                    ctx.lineTo(v.x + 38, v.y + 15); 
-                    ctx.lineTo(v.x + v.width, v.y + v.height - 8);
-                    ctx.lineTo(v.x, v.y + v.height - 4);
-                    ctx.closePath();
-                    ctx.fill();
-                    ctx.fillStyle = '#f8fafc';
-                    ctx.fillRect(v.x, v.y + 12, 5, 5);
-
-                    drawWheel(v.x + 8, v.y + v.height - 2, 7.5, wheelAngle);
-                    drawWheel(v.x + v.width - 8, v.y + v.height - 2, 7.5, wheelAngle);
+                // Cek Level Up
+                if (score % 50 === 0) {
+                    level++;
+                    levelEl.innerText = level;
+                    speed = Math.max(60, speed - 12);
+                    generateObstacles();
+                    playSound(750, 'square', 0.25);
+                    
+                    clearInterval(gameInterval);
+                    gameInterval = setInterval(gameLoop, speed);
                 }
 
-                if (checkCollision(pitik, v)) {
-                    gameActive = false;
-                }
+                spawnWorm();
+            }
+        }
 
-                if (v.x + v.width < 0) {
-                    vehicles.splice(i, 1);
-                    score++;
+        // MENGGAMBAR ELEMEN (DESAIN REALISTIS-ESTETIK)
+        function draw() {
+            // Background Rumput Kebun
+            ctx.fillStyle = '#0d2818';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Grid Rumput Selang-Seling
+            for (let x = 0; x < tileCount; x++) {
+                for (let y = 0; y < tileCount; y++) {
+                    if ((x + y) % 2 === 0) {
+                        ctx.fillStyle = 'rgba(16, 185, 129, 0.05)';
+                        ctx.fillRect(x * gridSize, y * gridSize, gridSize, gridSize);
+                    }
                 }
             }
 
-            ctx.shadowColor = 'rgba(0,0,0,0.3)';
-            ctx.shadowBlur = 4;
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 17px "Plus Jakarta Sans", sans-serif';
-            ctx.fillText('🏆 SKOR PERMAINAN: ' + score, 30, 38);
-            ctx.shadowBlur = 0; 
-            
-            let hue = Math.max(0, 140 - (currentLevel * 9));
-            ctx.fillStyle = `hsl(${hue}, 85%, 45%)`;
+            // Gambar Rintangan (Jebakan / Batu)
+            obstacles.forEach(obs => {
+                ctx.fillStyle = '#dc2626';
+                ctx.shadowColor = '#dc2626';
+                ctx.shadowBlur = 8;
+                ctx.beginPath();
+                ctx.roundRect(obs.x * gridSize + 2, obs.y * gridSize + 2, gridSize - 4, gridSize - 4, 6);
+                ctx.fill();
+
+                // Silang di dalam Jebakan
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(obs.x * gridSize + 6, obs.y * gridSize + 6);
+                ctx.lineTo(obs.x * gridSize + 14, obs.y * gridSize + 14);
+                ctx.moveTo(obs.x * gridSize + 14, obs.y * gridSize + 6);
+                ctx.lineTo(obs.x * gridSize + 6, obs.y * gridSize + 14);
+                ctx.stroke();
+            });
+
+            // Gambar Cacing Merah Muda (Target)
+            ctx.shadowColor = '#f472b6';
+            ctx.shadowBlur = 10;
+            ctx.strokeStyle = '#f472b6';
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
             ctx.beginPath();
-            if (ctx.roundRect) {
-                ctx.roundRect(30, 52, 120, 28, 8);
+            let wx = worm.x * gridSize + gridSize / 2;
+            let wy = worm.y * gridSize + gridSize / 2;
+            ctx.moveTo(wx - 6, wy + 2);
+            ctx.quadraticCurveTo(wx, wy - 6, wx + 6, wy + 2);
+            ctx.stroke();
+
+            // Gambar AYAM (Player Utama)
+            ctx.shadowColor = '#fbbf24';
+            ctx.shadowBlur = 12;
+
+            let cx = chicken.x * gridSize;
+            let cy = chicken.y * gridSize;
+
+            // Badan Ayam (Kuning Emas)
+            ctx.fillStyle = '#fbbf24';
+            ctx.beginPath();
+            ctx.arc(cx + 10, cy + 11, 8, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Paruh Oranye
+            ctx.fillStyle = '#f97316';
+            ctx.beginPath();
+            if (velocity.x === -1) {
+                ctx.moveTo(cx + 2, cy + 9); ctx.lineTo(cx - 4, cy + 11); ctx.lineTo(cx + 2, cy + 13);
             } else {
-                ctx.rect(30, 52, 120, 28);
+                ctx.moveTo(cx + 18, cy + 9); ctx.lineTo(cx + 24, cy + 11); ctx.lineTo(cx + 18, cy + 13);
             }
             ctx.fill();
-            
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 13px "Plus Jakarta Sans", sans-serif';
-            ctx.fillText('⚡ LEVEL: ' + currentLevel, 45, 71);
 
-            if (gameActive) {
-                requestAnimationFrame(loop);
-            } else {
-                ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+            // Jengger Merah
+            ctx.fillStyle = '#dc2626';
+            ctx.beginPath();
+            ctx.arc(cx + 10, cy + 2, 3, 0, Math.PI * 2);
+            ctx.arc(cx + 13, cy + 3, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Mata Ayam
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath();
+            let eyeX = velocity.x === -1 ? cx + 6 : cx + 14;
+            ctx.arc(eyeX, cy + 9, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Overlay Menu Utama & Game Over
+            if (!gameActive) {
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                ctx.fillStyle = '#ef4444';
-                ctx.font = 'bold 28px "Plus Jakarta Sans", sans-serif';
+
+                ctx.shadowBlur = 0;
                 ctx.textAlign = 'center';
-                ctx.fillText('KASIAN, PITIKNYA TERTABRAK! 💥', canvas.width / 2, canvas.height / 2 - 15);
-                
-                ctx.fillStyle = '#f8fafc';
-                ctx.font = '600 16px "Plus Jakarta Sans", sans-serif';
-                ctx.fillText('Kamu Bertahan Sampai Level ' + currentLevel + ' dengan Skor ' + score, canvas.width / 2, canvas.height / 2 + 25);
-                
-                ctx.fillStyle = '#fbbf24';
-                ctx.font = '500 14px "Plus Jakarta Sans", sans-serif';
-                ctx.fillText('Tekan SPASI / TAP Layar untuk Coba Lagi', canvas.width / 2, canvas.height / 2 + 60);
+
+                if (score === 0) {
+                    ctx.fillStyle = '#fbbf24';
+                    ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
+                    ctx.fillText('TEKAN PANAH / JOYSTICK', canvas.width / 2, canvas.height / 2 - 10);
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.font = '14px "Plus Jakarta Sans", sans-serif';
+                    ctx.fillText('Untuk Memulai Berburu Cacing', canvas.width / 2, canvas.height / 2 + 20);
+                } else {
+                    ctx.fillStyle = '#ef4444';
+                    ctx.font = 'bold 22px "Plus Jakarta Sans", sans-serif';
+                    ctx.fillText('AYAM TERTABRAK JEBAKAN! 💥', canvas.width / 2, canvas.height / 2 - 20);
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.font = '14px "Plus Jakarta Sans", sans-serif';
+                    ctx.fillText('Skor Akhir Kamu: ' + score, canvas.width / 2, canvas.height / 2 + 10);
+                    ctx.fillStyle = '#fbbf24';
+                    ctx.fillText('Tekan Tombol untuk Main Lagi', canvas.width / 2, canvas.height / 2 + 40);
+                }
                 ctx.textAlign = 'left';
             }
         }
 
-        // --- ENHANCEMENT CONTROLLER (HP + LAPTOP) --- //
-
-        // 1. Kontrol Tombol Spasi (Keyboard)
-        window.addEventListener('keydown', function(e) {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                pitik.jump();
-            }
-        });
-
-        // 2. Kontrol Klik Mouse & Tap Layar HP (Touchscreen)
-        function handleInteraction(e) {
-            e.preventDefault();
-            pitik.jump();
+        function gameLoop() {
+            update();
+            draw();
         }
 
-        canvas.addEventListener('click', handleInteraction);
-        canvas.addEventListener('touchstart', handleInteraction, { passive: false });
+        function startGame() {
+            chicken = { x: 10, y: 10 };
+            velocity = { x: 1, y: 0 };
+            score = 0;
+            level = 1;
+            speed = 120;
+            scoreEl.innerText = score;
+            levelEl.innerText = level;
+            gameActive = true;
+            generateObstacles();
+            spawnWorm();
 
-        // 3. Jalankan Game Loop Pertama Kali
+            if (gameInterval) clearInterval(gameInterval);
+            gameInterval = setInterval(gameLoop, speed);
+        }
+
+        function gameOver() {
+            playSound(120, 'sawtooth', 0.4);
+            gameActive = false;
+            clearInterval(gameInterval);
+            draw();
+        }
+
+        // Jalankan Render A
