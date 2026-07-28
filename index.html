@@ -2,324 +2,294 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ayam Makan Cacing - Game Seru GitHub Pages</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Pitik Nglayap - Petualangan Si Pitik</title>
     <style>
-        /* Modern Reset & Dynamic Styling */
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
             user-select: none;
             -webkit-user-select: none;
-            touch-action: manipulation;
         }
-
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #064e3b 50%, #022c22 100%);
-            background-attachment: fixed;
-            color: #f8fafc;
-            min-height: 100vh;
+            background-color: #1a1512;
+            color: #f0e6d2;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 15px;
-        }
-
-        /* HEADER & BRANDING LOGO */
-        header {
-            text-align: center;
-            margin-bottom: 15px;
-            width: 100%;
-            max-width: 600px;
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 14px;
-            background: rgba(30, 41, 59, 0.65);
-            backdrop-filter: blur(12px);
-            padding: 12px 24px;
-            border-radius: 20px;
-            border: 1px solid rgba(52, 211, 153, 0.3);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+            min-height: 100vh;
+            overflow: hidden;
         }
 
-        .logo-svg {
-            width: 50px;
-            height: 50px;
-            filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.6));
+        /* Header & Logo Pitik Nglayap */
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
         }
-
-        .logo-text h1 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(to right, #fbbf24, #f59e0b, #34d399);
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, #ff9900, #ff5500);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            text-shadow: 0 0 15px rgba(255, 153, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #ffaa00;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 10px #ffaa00;
+            border: 2px solid #fff;
+        }
+        /* Jengger Ayam pada Logo */
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 10px;
+            width: 12px;
+            height: 8px;
+            background: #ff0044;
+            border-radius: 5px 5px 0 0;
+        }
+        /* Paruh Ayam */
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            top: 12px;
+            right: -4px;
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 8px solid #ff3300;
         }
 
-        .logo-text p {
-            font-size: 0.75rem;
-            color: #a7f3d0;
+        /* Panel Info Game */
+        .info-panel {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 170, 0, 0.3);
+            align-items: center;
+        }
+        .info-box {
+            font-size: 0.95rem;
             font-weight: 600;
         }
-
-        /* GAME BOARD CONTAINER */
-        #game-wrapper {
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(16px);
-            border-radius: 24px;
-            padding: 15px;
-            border: 2px solid rgba(52, 211, 153, 0.25);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-            width: 100%;
-            max-width: 500px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .info-box span {
+            color: #ffaa00;
         }
 
-        /* HUD PANEL (SKOR, LEVEL, SOUND) */
-        .hud-panel {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 12px;
-            padding: 8px 15px;
-            background: rgba(30, 41, 59, 0.7);
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        /* Canvas Game */
+        #game-container {
+            position: relative;
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.9), 0 0 15px rgba(255, 153, 0, 0.2);
+            overflow: hidden;
+            border: 3px solid #4a3828;
         }
-
-        .hud-item {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .hud-label {
-            font-size: 0.65rem;
-            color: #fbbf24;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .hud-value {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: #ffffff;
-        }
-
-        .sound-btn {
-            background: rgba(251, 191, 36, 0.2);
-            border: 1px solid rgba(251, 191, 36, 0.4);
-            color: #fbbf24;
-            padding: 6px 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 700;
-            transition: all 0.2s;
-        }
-
-        .sound-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* CANVAS STYLING */
         canvas {
-            background: #0d2818;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 440px;
-            aspect-ratio: 1 / 1;
-            border: 3px solid rgba(52, 211, 153, 0.4);
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
             display: block;
-            cursor: pointer;
+            background: #2d3b1e; /* Warna Pedesaan/Rumput */
         }
 
-        /* JOYSTICK CONTROL (MOBILE & LAPTOP) */
-        .joystick-container {
-            margin-top: 15px;
-            display: grid;
-            grid-template-columns: repeat(3, 55px);
-            grid-template-rows: repeat(3, 55px);
-            gap: 8px;
-            justify-content: center;
-        }
-
-        .joy-btn {
-            background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9));
-            border: 1px solid rgba(251, 191, 36, 0.4);
-            border-radius: 16px;
-            color: #fbbf24;
-            font-size: 1.4rem;
+        /* Controls & Cara Bermain */
+        .controls-area {
             display: flex;
-            justify-content: center;
             align-items: center;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            transition: background 0.1s, transform 0.1s;
-        }
-
-        .joy-btn:active {
-            background: #fbbf24;
-            color: #0f172a;
-            transform: scale(0.92);
-        }
-
-        .joy-up { grid-column: 2; grid-row: 1; }
-        .joy-left { grid-column: 1; grid-row: 2; }
-        .joy-right { grid-column: 3; grid-row: 2; }
-        .joy-down { grid-column: 2; grid-row: 3; }
-
-        /* CARA BERMAIN SECTION */
-        .instructions {
-            margin-top: 20px;
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 16px;
-            padding: 15px;
-            max-width: 500px;
+            justify-content: space-between;
             width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            max-width: 400px;
+            margin-top: 12px;
+            padding: 0 10px;
+        }
+        
+        .how-to-play {
+            font-size: 0.75rem;
+            color: #c2b59b;
+            max-width: 210px;
+            line-height: 1.35;
+        }
+        .how-to-play b {
+            color: #ffaa00;
         }
 
-        .instructions h3 {
-            color: #fbbf24;
-            font-size: 0.95rem;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        /* Virtual Joystick */
+        #joystick-container {
+            width: 85px;
+            height: 85px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 170, 0, 0.4);
+            border-radius: 50%;
+            position: relative;
+            touch-action: none;
+        }
+        #joystick-knob {
+            width: 34px;
+            height: 34px;
+            background: radial-gradient(circle, #ffaa00, #ff5500);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px #ffaa00;
+            pointer-events: none;
         }
 
-        .instructions ul {
-            list-style: none;
+        /* Tombol Audio */
+        .btn-audio {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 170, 0, 0.4);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 12px;
+            cursor: pointer;
             font-size: 0.8rem;
-            color: #cbd5e1;
-            line-height: 1.6;
+            transition: 0.2s;
+        }
+        .btn-audio:hover {
+            background: rgba(255, 170, 0, 0.2);
         }
 
-        .instructions li::before {
-            content: "• ";
-            color: #fbbf24;
+        /* Overlay Game Over / Win */
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 21, 18, 0.88);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        #overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #overlay h2 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: #ff3300;
+            text-shadow: 0 0 10px #ff3300;
+        }
+        #overlay p {
+            margin-bottom: 18px;
+            font-size: 0.95rem;
+            color: #ddd;
+            text-align: center;
+            padding: 0 20px;
+        }
+        #overlay button {
+            padding: 10px 24px;
+            font-size: 1rem;
             font-weight: bold;
+            color: #1a1512;
+            background: #ffaa00;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 0 12px #ffaa00;
+            transition: transform 0.2s;
+        }
+        #overlay button:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
 
-    <!-- LOGO HEADER -->
-    <header>
-        <div class="logo-container">
-            <!-- Logo Vektor Ayam & Cacing -->
-            <svg class="logo-svg" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" fill="#065f46" stroke="#fbbf24" stroke-width="4"/>
-                <!-- Kepala Ayam -->
-                <circle cx="45" cy="45" r="18" fill="#fbbf24"/>
-                <!-- Jengger Merah -->
-                <circle cx="40" cy="24" r="5" fill="#dc2626"/>
-                <circle cx="48" cy="24" r="5" fill="#dc2626"/>
-                <!-- Paruh Oranye -->
-                <polygon points="58,42 72,48 58,54" fill="#f97316"/>
-                <!-- Mata -->
-                <circle cx="50" cy="40" r="3" fill="#0f172a"/>
-                <!-- Cacing di Paruh -->
-                <path d="M 68 50 Q 78 58 72 68" fill="none" stroke="#f472b6" stroke-width="4" stroke-linecap="round"/>
-            </svg>
-            <div class="logo-text">
-                <h1>Ayam Makan Cacing</h1>
-                <p>Game Petualangan Kebun (GitHub Pages)</p>
-            </div>
-        </div>
-    </header>
-
-    <!-- GAME WRAPPER -->
-    <div id="game-wrapper">
-        <div class="hud-panel">
-            <div class="hud-item">
-                <span class="hud-label">Skor</span>
-                <span id="score-val" class="hud-value">0</span>
-            </div>
-            <div class="hud-item">
-                <span class="hud-label">Level</span>
-                <span id="level-val" class="hud-value">1</span>
-            </div>
-            <button id="audio-toggle" class="sound-btn">🔊 Suara: ON</button>
-        </div>
-
-        <canvas id="gameCanvas" width="400" height="400"></canvas>
-
-        <!-- JOYSTICK VIRTUAL -->
-        <div class="joystick-container">
-            <button class="joy-btn joy-up" onclick="setDirection('UP')">▲</button>
-            <button class="joy-btn joy-left" onclick="setDirection('LEFT')">◄</button>
-            <button class="joy-btn joy-right" onclick="setDirection('RIGHT')">►</button>
-            <button class="joy-btn joy-down" onclick="setDirection('DOWN')">▼</button>
+    <!-- Header & Logo Game -->
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon"></div>
+            Pitik Nglayap
         </div>
     </div>
 
-    <!-- INTRUKSI CARA BERMAIN -->
-    <div class="instructions">
-        <h3>📖 Cara Bermain</h3>
-        <ul>
-            <li>Gunakan <b>Panah Keyboard (W,A,S,D)</b> atau <b>Joystick Virtual</b> untuk mengendalikan Ayam.</li>
-            <li>Kejar dan **Makan Cacing Merah Muda** yang muncul di kebun untuk menambah skor.</li>
-            <li>Hindari menabrak **Jebakan Ayam / Batu (Rintangan Merah)** dan pagar pembatas!</li>
-            <li>Setiap **50 Skor**, kamu akan **Naik Level**. Gerak cacing lebih lincah dan rintangan bertambah banyak!</li>
-        </ul>
+    <!-- Info Panel (Skor, Level, Musik) -->
+    <div class="info-panel">
+        <div class="info-box">Level: <span id="level-txt">1</span></div>
+        <div class="info-box">Skor: <span id="score-txt">0</span></div>
+        <button class="btn-audio" id="audio-btn" onclick="toggleAudio()">🔊 Musik: ON</button>
+    </div>
+
+    <!-- Area Game Canvas -->
+    <div id="game-container">
+        <canvas id="canvas" width="400" height="400"></canvas>
+        <div id="overlay">
+            <h2 id="overlay-title">PITIK KECEPET!</h2>
+            <p id="overlay-desc">Si Pitik tertangkap rintangan saat nglayap!</p>
+            <button onclick="restartGame()">Balen (Coba Lagi)</button>
+        </div>
+    </div>
+
+    <!-- Kontrol Game -->
+    <div class="controls-area">
+        <div class="how-to-play">
+            <b>Cara Bermain:</b><br>
+            • Keyboard: <b>Panah / WASD</b>.<br>
+            • Mobile: Geser <b>Joystick</b>.<br>
+            • Bantu <b>Pitik (Kuning)</b> nglayap menuju <b>Kandang (Hijau)</b>. Hindari <b>Srigala (Merah)</b> & Pagar!
+        </div>
+        <div id="joystick-container">
+            <div id="joystick-knob"></div>
+        </div>
     </div>
 
     <script>
-        const canvas = document.getElementById('gameCanvas');
+        const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
 
-        const scoreEl = document.getElementById('score-val');
-        const levelEl = document.getElementById('level-val');
-        const audioBtn = document.getElementById('audio-toggle');
+        // Elemen UI
+        const levelTxt = document.getElementById('level-txt');
+        const scoreTxt = document.getElementById('score-txt');
+        const overlay = document.getElementById('overlay');
+        const overlayTitle = document.getElementById('overlay-title');
+        const overlayDesc = document.getElementById('overlay-desc');
+        const audioBtn = document.getElementById('audio-btn');
 
-        const gridSize = 20;
-        const tileCount = canvas.width / gridSize;
-
-        // Player (Ayam)
-        let chicken = { x: 10, y: 10 };
-        let velocity = { x: 0, y: 0 };
-        
-        // Target (Cacing)
-        let worm = { x: 5, y: 5, animFrame: 0 };
-        let obstacles = [];
-
-        let score = 0;
-        let level = 1;
-        let speed = 120;
-        let gameActive = false;
-        let gameInterval = null;
-        let soundEnabled = true;
-
-        // WEB AUDIO SYNTHESIZER (Efek Suara Internal)
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        // Audio Synthesizer (Web Audio API)
         let audioCtx = null;
+        let isAudioMuted = false;
+        let bgmInterval = null;
 
         function initAudio() {
-            if (!audioCtx) audioCtx = new AudioContext();
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                startBGM();
+            }
         }
 
         function playSound(freq, type, duration) {
-            if (!soundEnabled || !audioCtx) return;
+            if (isAudioMuted || !audioCtx) return;
             try {
-                let osc = audioCtx.createOscillator();
-                let gain = audioCtx.createGain();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
                 osc.type = type;
-                osc.frequency.value = freq;
-                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
@@ -328,251 +298,279 @@
             } catch (e) {}
         }
 
-        // Suara Kluk-Kluk Ayam saat Makan
-        function playChickenEatSound() {
-            if (!soundEnabled || !audioCtx) return;
-            playSound(450, 'sine', 0.08);
-            setTimeout(() => playSound(650, 'triangle', 0.12), 60);
-        }
-
-        audioBtn.addEventListener('click', () => {
-            initAudio();
-            soundEnabled = !soundEnabled;
-            audioBtn.innerText = soundEnabled ? '🔊 Suara: ON' : '🔇 Suara: OFF';
-        });
-
-        // GENERATE RINTANGAN (JEBAKAN/BATU)
-        function generateObstacles() {
-            obstacles = [];
-            let count = (level - 1) * 3 + 2; 
-            for (let i = 0; i < count; i++) {
-                let obsX, obsY;
-                do {
-                    obsX = Math.floor(Math.random() * tileCount);
-                    obsY = Math.floor(Math.random() * tileCount);
-                } while (
-                    (obsX === chicken.x && obsY === chicken.y) || 
-                    (obsX === worm.x && obsY === worm.y)
-                );
-                obstacles.push({ x: obsX, y: obsY });
-            }
-        }
-
-        // SPAWN CACING
-        function spawnWorm() {
-            let wormX, wormY;
-            do {
-                wormX = Math.floor(Math.random() * tileCount);
-                wormY = Math.floor(Math.random() * tileCount);
-            } while (
-                (wormX === chicken.x && wormY === chicken.y) ||
-                obstacles.some(obs => obs.x === wormX && obs.y === wormY)
-            );
-
-            worm = { x: wormX, y: wormY, animFrame: 0 };
-        }
-
-        // KONTROL ARAH
-        function setDirection(dir) {
-            initAudio();
-            if (!gameActive) startGame();
-
-            if (dir === 'UP' && velocity.y === 0) { velocity = { x: 0, y: -1 }; }
-            if (dir === 'DOWN' && velocity.y === 0) { velocity = { x: 0, y: 1 }; }
-            if (dir === 'LEFT' && velocity.x === 0) { velocity = { x: -1, y: 0 }; }
-            if (dir === 'RIGHT' && velocity.x === 0) { velocity = { x: 1, y: 0 }; }
-        }
-
-        window.addEventListener('keydown', e => {
-            switch (e.key) {
-                case 'ArrowUp': case 'w': case 'W': setDirection('UP'); break;
-                case 'ArrowDown': case 's': case 'S': setDirection('DOWN'); break;
-                case 'ArrowLeft': case 'a': case 'A': setDirection('LEFT'); break;
-                case 'ArrowRight': case 'd': case 'D': setDirection('RIGHT'); break;
-            }
-        });
-
-        // UPDATE GAME STATE
-        function update() {
-            if (!gameActive) return;
-
-            // Gerakkan Ayam
-            chicken.x += velocity.x;
-            chicken.y += velocity.y;
-
-            // Tabrak Pagar/Tembok Kebun
-            if (chicken.x < 0 || chicken.x >= tileCount || chicken.y < 0 || chicken.y >= tileCount) {
-                return gameOver();
-            }
-
-            // Tabrak Rintangan (Jebakan Merah)
-            if (obstacles.some(obs => obs.x === chicken.x && obs.y === chicken.y)) {
-                return gameOver();
-            }
-
-            // Ayam Makan Cacing
-            if (chicken.x === worm.x && chicken.y === worm.y) {
-                score += 10;
-                scoreEl.innerText = score;
-                playChickenEatSound();
-
-                // Cek Level Up
-                if (score % 50 === 0) {
-                    level++;
-                    levelEl.innerText = level;
-                    speed = Math.max(60, speed - 12);
-                    generateObstacles();
-                    playSound(750, 'square', 0.25);
-                    
-                    clearInterval(gameInterval);
-                    gameInterval = setInterval(gameLoop, speed);
+        // BGM Bergaya Tradisional Sederhana
+        function startBGM() {
+            const notes = [220, 247, 277, 330, 370]; // Pentatonik
+            let step = 0;
+            bgmInterval = setInterval(() => {
+                if (!isAudioMuted && audioCtx) {
+                    playSound(notes[step % notes.length], 'sine', 0.25);
+                    step++;
                 }
+            }, 450);
+        }
 
-                spawnWorm();
+        function toggleAudio() {
+            initAudio();
+            isAudioMuted = !isAudioMuted;
+            audioBtn.innerText = isAudioMuted ? "🔇 Musik: OFF" : "🔊 Musik: ON";
+        }
+
+        // Variabel Game
+        const gridCols = 10;
+        const gridRows = 10;
+        const cellSize = canvas.width / gridCols;
+
+        let level = 1;
+        let score = 0;
+        let isGameOver = false;
+
+        // Karakter Utama: Pitik (Ayam) & Kandang (Goal)
+        let pitik = { x: 0, y: 0 };
+        let kandang = { x: gridCols - 1, y: gridRows - 1 };
+
+        let map = [];
+        let enemies = [];
+
+        // Inisialisasi Peta & Rintangan
+        function generateMap() {
+            map = Array.from({ length: gridRows }, () => Array(gridCols).fill(0));
+
+            // Pagar / Semak-semak Rintangan
+            let wallCount = 12 + Math.min(level * 2, 30);
+            for (let i = 0; i < wallCount; i++) {
+                let rx = Math.floor(Math.random() * gridCols);
+                let ry = Math.floor(Math.random() * gridRows);
+                if ((rx !== 0 || ry !== 0) && (rx !== kandang.x || ry !== kandang.y)) {
+                    map[ry][rx] = 1; // 1 = Pagar
+                }
+            }
+
+            // Musuh (Srigala / Musang)
+            enemies = [];
+            let enemyCount = Math.min(Math.floor(level / 2) + 1, 6);
+            for (let i = 0; i < enemyCount; i++) {
+                let ex, ey;
+                do {
+                    ex = Math.floor(Math.random() * gridCols);
+                    ey = Math.floor(Math.random() * gridRows);
+                } while (map[ey][ex] === 1 || (ex === 0 && ey === 0) || (ex === kandang.x && ey === kandang.y));
+
+                enemies.push({ x: ex, y: ey, dir: Math.random() < 0.5 ? 1 : -1, axis: Math.random() < 0.5 ? 'x' : 'y' });
             }
         }
 
-        // MENGGAMBAR ELEMEN (DESAIN REALISTIS-ESTETIK)
+        // Gambar Visual Game
         function draw() {
-            // Background Rumput Kebun
-            ctx.fillStyle = '#0d2818';
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Rumput & Pattern Latar
+            ctx.fillStyle = '#223018';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Grid Rumput Selang-Seling
-            for (let x = 0; x < tileCount; x++) {
-                for (let y = 0; y < tileCount; y++) {
-                    if ((x + y) % 2 === 0) {
-                        ctx.fillStyle = 'rgba(16, 185, 129, 0.05)';
-                        ctx.fillRect(x * gridSize, y * gridSize, gridSize, gridSize);
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.03)";
+            for (let i = 0; i < canvas.width; i += cellSize) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height);
+                ctx.moveTo(0, i); ctx.lineTo(canvas.width, i);
+                ctx.stroke();
+            }
+
+            // Gambar Pagar / Semak (Rintangan Diam)
+            for (let r = 0; r < gridRows; r++) {
+                for (let c = 0; c < gridCols; c++) {
+                    if (map[r][c] === 1) {
+                        ctx.fillStyle = '#4a3828'; // Pagar Kayu
+                        ctx.fillRect(c * cellSize + 4, r * cellSize + 4, cellSize - 8, cellSize - 8);
+                        ctx.strokeStyle = '#2b2016';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(c * cellSize + 4, r * cellSize + 4, cellSize - 8, cellSize - 8);
                     }
                 }
             }
 
-            // Gambar Rintangan (Jebakan / Batu)
-            obstacles.forEach(obs => {
-                ctx.fillStyle = '#dc2626';
-                ctx.shadowColor = '#dc2626';
+            // Gambar Kandang (Goal)
+            ctx.fillStyle = '#28a745';
+            ctx.shadowColor = '#28a745';
+            ctx.shadowBlur = 10;
+            ctx.fillRect(kandang.x * cellSize + 6, kandang.y * cellSize + 6, cellSize - 12, cellSize - 12);
+            ctx.shadowBlur = 0;
+
+            // Gambar Musuh (Srigala/Musang - Merah)
+            enemies.forEach(e => {
+                let cx = (e.x + 0.5) * cellSize;
+                let cy = (e.y + 0.5) * cellSize;
+
+                ctx.fillStyle = '#ff3300';
+                ctx.shadowColor = '#ff3300';
                 ctx.shadowBlur = 8;
                 ctx.beginPath();
-                ctx.roundRect(obs.x * gridSize + 2, obs.y * gridSize + 2, gridSize - 4, gridSize - 4, 6);
+                ctx.arc(cx, cy, cellSize / 3, 0, Math.PI * 2);
                 ctx.fill();
-
-                // Silang di dalam Jebakan
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(obs.x * gridSize + 6, obs.y * gridSize + 6);
-                ctx.lineTo(obs.x * gridSize + 14, obs.y * gridSize + 14);
-                ctx.moveTo(obs.x * gridSize + 14, obs.y * gridSize + 6);
-                ctx.lineTo(obs.x * gridSize + 6, obs.y * gridSize + 14);
-                ctx.stroke();
+                ctx.shadowBlur = 0;
             });
 
-            // Gambar Cacing Merah Muda (Target)
-            ctx.shadowColor = '#f472b6';
-            ctx.shadowBlur = 10;
-            ctx.strokeStyle = '#f472b6';
-            ctx.lineWidth = 4;
-            ctx.lineCap = 'round';
-            ctx.beginPath();
-            let wx = worm.x * gridSize + gridSize / 2;
-            let wy = worm.y * gridSize + gridSize / 2;
-            ctx.moveTo(wx - 6, wy + 2);
-            ctx.quadraticCurveTo(wx, wy - 6, wx + 6, wy + 2);
-            ctx.stroke();
+            // Gambar Pitik (Karakter Utama - Kuning/Oranye)
+            let px = (pitik.x + 0.5) * cellSize;
+            let py = (pitik.y + 0.5) * cellSize;
 
-            // Gambar AYAM (Player Utama)
-            ctx.shadowColor = '#fbbf24';
+            ctx.fillStyle = '#ffaa00';
+            ctx.shadowColor = '#ffaa00';
             ctx.shadowBlur = 12;
-
-            let cx = chicken.x * gridSize;
-            let cy = chicken.y * gridSize;
-
-            // Badan Ayam (Kuning Emas)
-            ctx.fillStyle = '#fbbf24';
             ctx.beginPath();
-            ctx.arc(cx + 10, cy + 11, 8, 0, Math.PI * 2);
+            ctx.arc(px, py, cellSize / 3, 0, Math.PI * 2);
             ctx.fill();
+            ctx.shadowBlur = 0;
 
-            // Paruh Oranye
-            ctx.fillStyle = '#f97316';
+            // Jengger Pitik
+            ctx.fillStyle = '#ff0044';
             ctx.beginPath();
-            if (velocity.x === -1) {
-                ctx.moveTo(cx + 2, cy + 9); ctx.lineTo(cx - 4, cy + 11); ctx.lineTo(cx + 2, cy + 13);
-            } else {
-                ctx.moveTo(cx + 18, cy + 9); ctx.lineTo(cx + 24, cy + 11); ctx.lineTo(cx + 18, cy + 13);
-            }
+            ctx.arc(px, py - 10, 4, 0, Math.PI * 2);
             ctx.fill();
+        }
 
-            // Jengger Merah
-            ctx.fillStyle = '#dc2626';
-            ctx.beginPath();
-            ctx.arc(cx + 10, cy + 2, 3, 0, Math.PI * 2);
-            ctx.arc(cx + 13, cy + 3, 2.5, 0, Math.PI * 2);
-            ctx.fill();
+        // Pergerakan Pitik
+        function movePitik(dx, dy) {
+            initAudio();
+            if (isGameOver) return;
 
-            // Mata Ayam
-            ctx.fillStyle = '#0f172a';
-            ctx.beginPath();
-            let eyeX = velocity.x === -1 ? cx + 6 : cx + 14;
-            ctx.arc(eyeX, cy + 9, 2, 0, Math.PI * 2);
-            ctx.fill();
+            let newX = pitik.x + dx;
+            let newY = pitik.y + dy;
 
-            // Overlay Menu Utama & Game Over
-            if (!gameActive) {
-                ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                ctx.shadowBlur = 0;
-                ctx.textAlign = 'center';
-
-                if (score === 0) {
-                    ctx.fillStyle = '#fbbf24';
-                    ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
-                    ctx.fillText('TEKAN PANAH / JOYSTICK', canvas.width / 2, canvas.height / 2 - 10);
-                    ctx.fillStyle = '#f8fafc';
-                    ctx.font = '14px "Plus Jakarta Sans", sans-serif';
-                    ctx.fillText('Untuk Memulai Berburu Cacing', canvas.width / 2, canvas.height / 2 + 20);
-                } else {
-                    ctx.fillStyle = '#ef4444';
-                    ctx.font = 'bold 22px "Plus Jakarta Sans", sans-serif';
-                    ctx.fillText('AYAM TERTABRAK JEBAKAN! 💥', canvas.width / 2, canvas.height / 2 - 20);
-                    ctx.fillStyle = '#f8fafc';
-                    ctx.font = '14px "Plus Jakarta Sans", sans-serif';
-                    ctx.fillText('Skor Akhir Kamu: ' + score, canvas.width / 2, canvas.height / 2 + 10);
-                    ctx.fillStyle = '#fbbf24';
-                    ctx.fillText('Tekan Tombol untuk Main Lagi', canvas.width / 2, canvas.height / 2 + 40);
+            if (newX >= 0 && newX < gridCols && newY >= 0 && newY < gridRows) {
+                if (map[newY][newX] !== 1) {
+                    pitik.x = newX;
+                    pitik.y = newY;
+                    playSound(480, 'sine', 0.04); // Sound langkah pitik
+                    checkState();
                 }
-                ctx.textAlign = 'left';
             }
         }
 
-        function gameLoop() {
-            update();
-            draw();
+        // Pergerakan Musuh
+        function updateEnemies() {
+            if (isGameOver) return;
+            enemies.forEach(e => {
+                let nextX = e.x;
+                let nextY = e.y;
+
+                if (e.axis === 'x') nextX += e.dir;
+                else nextY += e.dir;
+
+                if (nextX < 0 || nextX >= gridCols || nextY < 0 || nextY >= gridRows || map[nextY][nextX] === 1) {
+                    e.dir *= -1;
+                } else {
+                    e.x = nextX;
+                    e.y = nextY;
+                }
+            });
+            checkState();
         }
 
-        function startGame() {
-            chicken = { x: 10, y: 10 };
-            velocity = { x: 1, y: 0 };
-            score = 0;
+        // Cek Status Game
+        function checkState() {
+            // Nabrak Musuh
+            enemies.forEach(e => {
+                if (e.x === pitik.x && e.y === pitik.y) {
+                    playSound(140, 'sawtooth', 0.35);
+                    endGame(false);
+                }
+            });
+
+            // Sampai di Kandang
+            if (pitik.x === kandang.x && pitik.y === kandang.y) {
+                score += 150 + (level * 25);
+                level++;
+                scoreTxt.innerText = score;
+                levelTxt.innerText = level;
+                playSound(650, 'sine', 0.18);
+                initLevel();
+            }
+        }
+
+        function endGame(isWin) {
+            isGameOver = true;
+            overlay.classList.add('active');
+            if (!isWin) {
+                overlayTitle.innerText = "PITIK KECEPET!";
+                overlayTitle.style.color = "#ff3300";
+                overlayDesc.innerText = `Pitik nglayap keterlaluasi & kecepet rintangan ing Level ${level}. Total Skor: ${score}`;
+            }
+        }
+
+        function restartGame() {
             level = 1;
-            speed = 120;
-            scoreEl.innerText = score;
-            levelEl.innerText = level;
-            gameActive = true;
-            generateObstacles();
-            spawnWorm();
-
-            if (gameInterval) clearInterval(gameInterval);
-            gameInterval = setInterval(gameLoop, speed);
+            score = 0;
+            scoreTxt.innerText = score;
+            levelTxt.innerText = level;
+            isGameOver = false;
+            overlay.classList.remove('active');
+            initLevel();
         }
 
-        function gameOver() {
-            playSound(120, 'sawtooth', 0.4);
-            gameActive = false;
-            clearInterval(gameInterval);
+        function initLevel() {
+            pitik = { x: 0, y: 0 };
+            generateMap();
             draw();
         }
 
-        // Jalankan Render A
+        // Kontrol Keyboard
+        window.addEventListener('keydown', (e) => {
+            switch (e.key) {
+                case 'ArrowUp': case 'w': case 'W': movePitik(0, -1); break;
+                case 'ArrowDown': case 's': case 'S': movePitik(0, 1); break;
+                case 'ArrowLeft': case 'a': case 'A': movePitik(-1, 0); break;
+                case 'ArrowRight': case 'd': case 'D': movePitik(1, 0); break;
+            }
+        });
+
+        // Kontrol Virtual Joystick
+        const joystick = document.getElementById('joystick-container');
+        const knob = document.getElementById('joystick-knob');
+        let joyActive = false;
+        let startX, startY;
+
+        joystick.addEventListener('pointerdown', (e) => {
+            joyActive = true;
+            startX = e.clientX;
+            startY = e.clientY;
+        });
+
+        window.addEventListener('pointermove', (e) => {
+            if (!joyActive) return;
+            let dx = e.clientX - startX;
+            let dy = e.clientY - startY;
+            let dist = Math.min(Math.hypot(dx, dy), 28);
+            let angle = Math.atan2(dy, dx);
+
+            knob.style.transform = `translate(calc(-50% + ${Math.cos(angle) * dist}px), calc(-50% + ${Math.sin(angle) * dist}px))`;
+        });
+
+        window.addEventListener('pointerup', (e) => {
+            if (!joyActive) return;
+            joyActive = false;
+            knob.style.transform = `translate(-50%, -50%)`;
+
+            let dx = e.clientX - startX;
+            let dy = e.clientY - startY;
+
+            if (Math.hypot(dx, dy) > 15) {
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    movePitik(dx > 0 ? 1 : -1, 0);
+                } else {
+                    movePitik(0, dy > 0 ? 1 : -1);
+                }
+            }
+        });
+
+        // Game Loop untuk Musuh
+        setInterval(() => {
+            updateEnemies();
+            draw();
+        }, 380);
+
+        // Jalankan Game Pertama Kali
+        initLevel();
+    </script>
+</body>
+    </html>
