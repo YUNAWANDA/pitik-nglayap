@@ -2,611 +2,546 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Ayam Mencari Makan - Petualangan Realistis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas Game - Pitik Nglayap Nyebrang Jalan (Endless Forest)</title>
     <style>
+        /* Modern Reset & Vibrant Base Styling */
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            user-select: none;
-            -webkit-user-select: none;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: #0d1b2a;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
+            background: linear-gradient(135deg, #0f172a 0%, #064e3b 50%, #022c22 100%);
+            background-attachment: fixed;
+            color: #f8fafc;
+            line-height: 1.6;
+            padding-bottom: 60px;
         }
 
+        /* Glassmorphism Header Berkilau */
+        header {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(4, 120, 87, 0.4));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: white;
+            text-align: center;
+            padding: 50px 20px;
+            border-bottom: 1px solid rgba(52, 211, 153, 0.3);
+            box-shadow: 0 10px 30px rgba(4, 120, 87, 0.2);
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #34d399, #6ee7b7, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 500;
+            color: #a7f3d0;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Neon Glass Arena Container */
         #game-container {
+            text-align: center;
+            background: rgba(30, 41, 59, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 30px;
+            border-radius: 24px;
+            margin-bottom: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(52, 211, 153, 0.2);
             position: relative;
-            width: 100vw;
-            max-width: 960px;
-            height: 100vh;
-            max-height: 540px;
-            background-color: #000;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.85);
-            border-radius: 16px;
-            overflow: hidden;
-            border: 3px solid #38b000;
         }
 
         canvas {
-            width: 100%;
-            height: 100%;
             display: block;
+            margin: 0 auto;
+            border-radius: 16px;
+            max-width: 100%;
+            border: 4px solid rgba(52, 211, 153, 0.4);
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.25);
         }
 
-        /* Overlay UI */
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(10, 25, 12, 0.9);
-            backdrop-filter: blur(5px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* Logo Branding */
-        .logo-container {
-            margin-bottom: 12px;
-            animation: float 3s infinite ease-in-out;
-        }
-
-        .logo-svg {
-            width: 110px;
-            height: 110px;
-            filter: drop-shadow(0px 8px 18px rgba(112, 224, 0, 0.45));
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            color: #ccff00;
-            text-shadow: 3px 3px 0 #38b000, 5px 5px 15px rgba(0,0,0,0.8);
-            margin-bottom: 6px;
-            letter-spacing: 2px;
-        }
-
-        p.subtitle {
-            font-size: 0.95rem;
-            color: #d8f3dc;
-            margin-bottom: 24px;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 15px;
-        }
-
-        button {
-            padding: 12px 30px;
+        .btn-instruction {
+            margin-top: 22px;
+            color: #cbd5e1;
             font-size: 1rem;
-            font-weight: bold;
-            border: none;
+            font-weight: 500;
+            background: rgba(15, 23, 42, 0.6);
+            display: inline-block;
+            padding: 10px 24px;
             border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
-        .btn-primary {
-            background: linear-gradient(45deg, #70e000, #38b000);
-            color: #002b00;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px) scale(1.05);
-            background: linear-gradient(45deg, #9ef01a, #70e000);
-            box-shadow: 0 8px 20px rgba(112, 224, 0, 0.4);
-        }
-
-        .btn-secondary {
-            background: #1b4332;
-            color: #d8f3dc;
-            border: 1px solid #40916c;
-        }
-
-        .btn-secondary:hover {
-            background: #2d6a4f;
-        }
-
-        /* Modal Cara Bermain */
-        .modal {
-            background: #081c15;
-            border-radius: 12px;
-            padding: 25px;
-            max-width: 480px;
-            border: 2px solid #70e000;
-            box-shadow: 0 0 30px rgba(112, 224, 0, 0.25);
-        }
-
-        .modal h2 {
-            color: #ccff00;
-            margin-bottom: 12px;
-        }
-
-        .modal ul {
-            text-align: left;
-            margin: 15px 0;
-            padding-left: 20px;
-            font-size: 0.9rem;
-            color: #b7e4c7;
-            line-height: 1.7;
-        }
-
-        /* Virtual Joystick 360 Analog (Mobile Touch) */
-        #joystick-zone {
-            position: absolute;
-            bottom: 25px;
-            left: 25px;
-            width: 110px;
-            height: 110px;
-            background: rgba(255, 255, 255, 0.12);
-            border: 2px solid rgba(204, 255, 0, 0.5);
-            border-radius: 50%;
-            z-index: 5;
-            touch-action: none;
-            display: none;
-        }
-
-        #joystick-knob {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 46px;
-            height: 46px;
-            background: linear-gradient(135deg, #ccff00, #38b000);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 12px rgba(0,0,0,0.6);
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+        .btn-instruction strong {
+            color: #fbbf24;
+            text-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
         }
     </style>
 </head>
 <body>
 
-<div id="game-container">
-    <canvas id="gameCanvas"></canvas>
+    <header>
+        <h1>Projek Game: Pitik Nglayap (Endless Forest)</h1>
+        <p>Tugas Besar Pemrograman Perangkat Lunak & Gim (RPL)</p>
+    </header>
 
-    <!-- Virtual Touch Joystick (Mobile/Tablet) -->
-    <div id="joystick-zone">
-        <div id="joystick-knob"></div>
-    </div>
-
-    <!-- Menu Utama -->
-    <div id="menu-overlay" class="overlay">
-        <div class="logo-container">
-            <!-- Logo Ayam SVG -->
-            <svg class="logo-svg" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="46" fill="#1b4332" stroke="#70e000" stroke-width="4"/>
-                <path d="M 25 65 Q 15 40 38 30 Q 60 20 72 42 Q 82 65 52 75 Z" fill="#ffffff" />
-                <circle cx="68" cy="32" r="13" fill="#ffffff"/>
-                <path d="M 62 20 Q 67 10 72 20 Q 77 10 82 22" fill="#e63946" stroke="#e63946" stroke-width="3" stroke-linecap="round"/>
-                <polygon points="78,32 92,36 78,41" fill="#ffb703"/>
-                <circle cx="73" cy="29" r="3" fill="#000000"/>
-                <circle cx="74" cy="28" r="1" fill="#ffffff"/>
-                <path d="M 22 55 Q 5 45 10 30 Q 22 38 28 45" fill="#e63946"/>
-                <path d="M 22 55 Q 10 35 18 22 Q 26 32 28 45" fill="#ffb703"/>
-            </svg>
-        </div>
-        <h1>AYAM CARI MAKAN</h1>
-        <p class="subtitle">Jelajahi peternakan, patuk makanan lezat, dan hindari bahaya!</p>
-        
-        <div class="btn-group">
-            <button class="btn-primary" onclick="startGame()">MULAILAH PETUALANGAN</button>
-            <button class="btn-secondary" onclick="showHowToPlay()">CARA BERMAIN</button>
+    <div class="container">
+        <div id="game-container">
+            <canvas id="gameCanvas" width="750" height="360"></canvas>
+            <div class="btn-instruction">Tekan <strong>TOMBOL SPASI</strong> atau <strong>KLIK AREA GAME</strong> untuk Melompat Menyebrang Jalan</div>
         </div>
     </div>
 
-    <!-- Modal Cara Bermain -->
-    <div id="howto-overlay" class="overlay hidden">
-        <div class="modal">
-            <h2>Cara Bermain</h2>
-            <ul>
-                <li><strong>PC / Laptop:</strong> Gunakan <strong>WASD</strong> atau <strong>Panah Keyboard</strong> untuk bergerak 360°.</li>
-                <li><strong>Mobile / HP:</strong> Gunakan <strong>Virtual Joystick Analog</strong> di sudut kiri bawah layar.</li>
-                <li><strong>Cari Makanan:</strong> Patuk **Biji Jagung** (+10 Poin) & **Cacing Segar** (+25 Poin).</li>
-                <li><strong>Garis Energi & Kelaparan:</strong> Energi berkurang perlahan; makan agar ayam tidak lemas.</li>
-                <li><strong>Waspadai Rintangan:</strong> Mobil melintas di jalan raya, Batu Karang, & **Burung Elang** berburu dari udara!</li>
-                <li><strong>Progresi Level:</strong> Setiap naik level, makanan lebih bernutrisi tetapi kecepatan musuh meningkat.</li>
-            </ul>
-            <button class="btn-primary" onclick="hideHowToPlay()">SAYA SIAP!</button>
-        </div>
-    </div>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
 
-    <!-- Game Over Overlay -->
-    <div id="gameover-overlay" class="overlay hidden">
-        <h1 style="color: #e63946;">PETUALANGAN BERAKHIR!</h1>
-        <p style="margin: 10px 0; font-size: 1.1rem; color: #d8f3dc;" id="death-reason">Ayam tertangkap bahaya!</p>
-        <div style="background: rgba(255,255,255,0.08); padding: 15px 35px; border-radius: 12px; margin: 15px 0; border: 1px solid #40916c;">
-            <p style="font-size: 1.2rem;">Skor Total: <span id="final-score" style="color: #ccff00; font-weight: bold;">0</span></p>
-            <p style="font-size: 0.95rem; color: #b7e4c7;">Level Dicapai: <span id="final-level">1</span></p>
-        </div>
-        <button class="btn-primary" onclick="startGame()">COBA LAGI</button>
-    </div>
-</div>
+        let gameActive = true;
+        let score = 0;
+        let currentLevel = 1;
+        let baseSpeed = 4.8;
+        let vehicleSpeed = 4.8;
+        let spawnTimer = 0;
+        let wheelAngle = 0; 
 
-<script>
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-
-    canvas.width = 960;
-    canvas.height = 540;
-
-    // --- SOUND SYNTHESIZER (Web Audio API) ---
-    class SoundEngine {
-        constructor() {
-            this.ctx = null;
-        }
-
-        init() {
-            if (!this.ctx) {
-                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (this.ctx.state === 'suspended') {
-                this.ctx.resume();
-            }
-        }
-
-        playEatCorn() {
-            this.init();
-            let osc = this.ctx.createOscillator();
-            let gain = this.ctx.createGain();
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(600, this.ctx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(1100, this.ctx.currentTime + 0.08);
-            gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
-            osc.start();
-            osc.stop(this.ctx.currentTime + 0.08);
-        }
-
-        playEatWorm() {
-            this.init();
-            let osc = this.ctx.createOscillator();
-            let gain = this.ctx.createGain();
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(400, this.ctx.currentTime);
-            osc.frequency.linearRampToValueAtTime(800, this.ctx.currentTime + 0.12);
-            gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
-            osc.start();
-            osc.stop(this.ctx.currentTime + 0.12);
-        }
-
-        playHit() {
-            this.init();
-            let osc = this.ctx.createOscillator();
-            let gain = this.ctx.createGain();
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(150, this.ctx.currentTime);
-            osc.frequency.linearRampToValueAtTime(30, this.ctx.currentTime + 0.35);
-            gain.gain.setValueAtTime(0.4, this.ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.35);
-            osc.start();
-            osc.stop(this.ctx.currentTime + 0.35);
-        }
-
-        playBgm() {
-            this.init();
-            if (this.bgmTimer) return;
-            const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 329.63];
-            let step = 0;
-            this.bgmTimer = setInterval(() => {
-                if (!gameRunning) return;
-                let osc = this.ctx.createOscillator();
-                let gain = this.ctx.createGain();
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(notes[step % notes.length], this.ctx.currentTime);
-                gain.gain.setValueAtTime(0.025, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.2);
-                osc.start();
-                osc.stop(this.ctx.currentTime + 0.2);
-                step++;
-            }, 240);
-        }
-
-        stopBgm() {
-            if (this.bgmTimer) {
-                clearInterval(this.bgmTimer);
-                this.bgmTimer = null;
-            }
-        }
-    }
-
-    const sound = new SoundEngine();
-
-    // --- GAME ENGINE STATE ---
-    let gameRunning = false;
-    let score = 0;
-    let level = 1;
-    let energy = 100;
-    let frameCount = 0;
-
-    // Ayam
-    const player = {
-        x: 480,
-        y: 120,
-        radius: 17,
-        speed: 3.6,
-        angle: 0,
-        vx: 0,
-        vy: 0,
-        peckAnim: 0
-    };
-
-    // Objek Lapangan
-    let foods = [];
-    let cars = [];
-    let eagles = [];
-    let rocks = [];
-
-    // Keyboard Input
-    const keys = {};
-    window.addEventListener('keydown', e => keys[e.key.toLowerCase()] = true);
-    window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
-
-    // Virtual Touch Joystick
-    const joystickZone = document.getElementById('joystick-zone');
-    const joystickKnob = document.getElementById('joystick-knob');
-    let joystickActive = false;
-    let joystickCenter = { x: 0, y: 0 };
-
-    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-        joystickZone.style.display = 'block';
-    }
-
-    joystickZone.addEventListener('touchstart', e => {
-        joystickActive = true;
-        const rect = joystickZone.getBoundingClientRect();
-        joystickCenter = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-    });
-
-    window.addEventListener('touchmove', e => {
-        if (!joystickActive) return;
-        const touch = e.touches[0];
-        const dx = touch.clientX - joystickCenter.x;
-        const dy = touch.clientY - joystickCenter.y;
-        const dist = Math.min(Math.hypot(dx, dy), 40);
-        const angle = Math.atan2(dy, dx);
-
-        const knobX = Math.cos(angle) * dist;
-        const knobY = Math.sin(angle) * dist;
-        joystickKnob.style.transform = `translate(calc(-50% + ${knobX}px), calc(-50% + ${knobY}px))`;
-
-        player.vx = (knobX / 40) * player.speed;
-        player.vy = (knobY / 40) * player.speed;
-        player.angle = angle;
-    });
-
-    window.addEventListener('touchend', () => {
-        if (!joystickActive) return;
-        joystickActive = false;
-        joystickKnob.style.transform = `translate(-50%, -50%)`;
-        player.vx = 0;
-        player.vy = 0;
-    });
-
-    // --- INISIALISASI PETA & ENTITAS ---
-    function initMapObjects() {
-        rocks = [];
-        for (let i = 0; i < 7; i++) {
-            rocks.push({
-                x: Math.random() * (canvas.width - 100) + 50,
-                y: Math.random() * (canvas.height - 200) + (i % 2 === 0 ? 40 : 340),
-                radius: Math.random() * 8 + 14
+        // Efek Atmosfer Daun Berguguran
+        let leaves = [];
+        for(let i=0; i<15; i++) {
+            leaves.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * 140,
+                size: Math.random() * 4 + 2,
+                speed: Math.random() * 0.5 + 0.3,
+                wobble: Math.random() * 2
             });
         }
 
-        foods = [];
-        for (let i = 0; i < 9; i++) spawnFood();
-    }
+        const pitik = {
+            x: 80,
+            y: 250, 
+            width: 36,
+            height: 36,
+            gravity: 0.65,
+            lift: -12.5,
+            velocity: 0,
+            groundY: 250,
+            jump: function() {
+                if (this.y === this.groundY && gameActive) {
+                    this.velocity = this.lift;
+                }
+                if (!gameActive) {
+                    resetGame();
+                }
+            },
+            update: function() {
+                this.velocity += this.gravity;
+                this.y += this.velocity;
 
-    function spawnFood() {
-        const isWorm = Math.random() < 0.3; // 30% peluang cacing
-        foods.push({
-            x: Math.random() * (canvas.width - 80) + 40,
-            y: Math.random() * (canvas.height - 80) + 40,
-            type: isWorm ? 'worm' : 'corn',
-            value: isWorm ? 25 : 10,
-            energyGain: isWorm ? 20 : 10,
-            size: isWorm ? 7 : 5
-        });
-    }
-
-    function spawnCar() {
-        const isRight = Math.random() > 0.5;
-        cars.push({
-            x: isRight ? canvas.width + 70 : -70,
-            y: 220 + (Math.random() > 0.5 ? 20 : 55),
-            width: 70,
-            height: 32,
-            speed: (isRight ? -1 : 1) * (3.8 + level * 0.5),
-            color: ['#e63946', '#1d3557', '#f4a261', '#2a9d8f'][Math.floor(Math.random()*4)]
-        });
-    }
-
-    function spawnEagle() {
-        eagles.push({
-            x: Math.random() * canvas.width,
-            y: -50,
-            targetX: player.x,
-            targetY: player.y,
-            speed: 2.2 + level * 0.4,
-            size: 26
-        });
-    }
-
-    // --- GRAFIS & RENDER CANVAS ---
-    function drawWorld() {
-        // Lapangan Rumput Pedesaan
-        ctx.fillStyle = '#2d6a4f';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Rumput Detail
-        ctx.strokeStyle = '#40916c';
-        ctx.lineWidth = 1.5;
-        for (let x = 20; x < canvas.width; x += 45) {
-            for (let y = 20; y < canvas.height; y += 45) {
+                if (this.y > this.groundY) {
+                    this.y = this.groundY;
+                    this.velocity = 0;
+                }
+            },
+            draw: function() {
+                // Kaki Ayam Emas
+                ctx.strokeStyle = '#f59e0b';
+                ctx.lineWidth = 3;
                 ctx.beginPath();
-                ctx.moveTo(x, y);
-                ctx.lineTo(x + 3, y - 6);
+                ctx.moveTo(this.x + 12, this.y + 25);
+                ctx.lineTo(this.x + 12, this.y + 36);
+                ctx.moveTo(this.x + 24, this.y + 25);
+                ctx.lineTo(this.x + 24, this.y + 36);
                 ctx.stroke();
+
+                // Bulu Ekor Belakang
+                ctx.fillStyle = '#d97706';
+                ctx.beginPath();
+                ctx.moveTo(this.x + 4, this.y + 16);
+                ctx.quadraticCurveTo(this.x - 6, this.y + 2, this.x + 6, this.y + 8);
+                ctx.fill();
+
+                // Badan Utama
+                ctx.fillStyle = '#fbbf24';
+                ctx.beginPath();
+                ctx.arc(this.x + 16, this.y + 16, 14, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Sayap Ayam
+                ctx.fillStyle = '#f59e0b';
+                ctx.beginPath();
+                ctx.ellipse(this.x + 12, this.y + 18, 8, 5, Math.PI/6, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Leher & Kepala
+                ctx.fillStyle = '#fbbf24';
+                ctx.beginPath();
+                ctx.arc(this.x + 28, this.y + 6, 9, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Jengger Merah Menyala
+                ctx.fillStyle = '#dc2626';
+                ctx.beginPath();
+                ctx.arc(this.x + 25, this.y - 4, 3.5, 0, Math.PI * 2);
+                ctx.arc(this.x + 30, this.y - 3, 3.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Paruh Oranye
+                ctx.fillStyle = '#f97316';
+                ctx.beginPath();
+                ctx.moveTo(this.x + 35, this.y + 4);
+                ctx.lineTo(this.x + 43, this.y + 8);
+                ctx.lineTo(this.x + 35, this.y + 12);
+                ctx.fill();
+
+                // Mata
+                ctx.fillStyle = '#0f172a';
+                ctx.beginPath();
+                ctx.arc(this.x + 30, this.y + 4, 2.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        };
+
+        let vehicles = [];
+        const vehicleTypes = [
+            { type: 'sedan', width: 85, height: 35, color: '#ff0055' },
+            { type: 'truck', width: 115, height: 55, color: '#00b4d8' },
+            { type: 'motor', width: 48, height: 32, color: '#ffb703' }
+        ];
+
+        const trees = [
+            { x: 40, size: 55 }, { x: 130, size: 75 }, { x: 240, size: 50 },
+            { x: 340, size: 70 }, { x: 470, size: 80 }, { x: 590, size: 55 },
+            { x: 700, size: 65 }
+        ];
+
+        function spawnVehicle() {
+            let randomType = vehicleTypes[Math.floor(Math.random() * vehicleTypes.length)];
+            vehicles.push({
+                x: canvas.width,
+                y: 286 - randomType.height,
+                width: randomType.width,
+                height: randomType.height,
+                color: randomType.color,
+                type: randomType.type,
+                speed: vehicleSpeed
+            });
+        }
+
+        function drawEnvironment() {
+            // 1. Langit Senja Estetik (Gradasi Linear)
+            let skyGrad = ctx.createLinearGradient(0, 0, 0, 150);
+            skyGrad.addColorStop(0, '#fdba74');
+            skyGrad.addColorStop(0.5, '#f472b6');
+            skyGrad.addColorStop(1, '#38bdf8');
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(0, 0, canvas.width, 150);
+
+            // 2. Menggambar Pohon Hutan Pinus
+            trees.forEach(tree => {
+                ctx.fillStyle = '#065f46'; 
+                ctx.beginPath();
+                ctx.moveTo(tree.x, 150 - tree.size);
+                ctx.lineTo(tree.x - (tree.size * 0.45), 150);
+                ctx.lineTo(tree.x + (tree.size * 0.45), 150);
+                ctx.fill();
+
+                ctx.fillStyle = '#059669'; 
+                ctx.beginPath();
+                ctx.moveTo(tree.x, 150 - (tree.size * 0.75));
+                ctx.lineTo(tree.x - (tree.size * 0.35), 150);
+                ctx.lineTo(tree.x + (tree.size * 0.35), 150);
+                ctx.fill();
+            });
+
+            // Animasi Daun Berguguran
+            ctx.fillStyle = 'rgba(52, 211, 153, 0.6)';
+            leaves.forEach(leaf => {
+                leaf.y += leaf.speed;
+                leaf.x += Math.sin(leaf.y * 0.05) * 0.3;
+                if(leaf.y > 140) leaf.y = 0;
+                ctx.beginPath();
+                ctx.arc(leaf.x, leaf.y, leaf.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // 3. Semak Belukar Pembatas Atas Jalan
+            ctx.fillStyle = '#10b981';
+            ctx.fillRect(0, 140, canvas.width, 20);
+            
+            ctx.fillStyle = '#34d399';
+            for(let i = -10; i < canvas.width + 20; i += 40) {
+                ctx.beginPath();
+                ctx.arc(i + 15, 145, 10, 0, Math.PI, true);
+                ctx.fill();
+            }
+
+            // 4. Badan Aspal Jalan Raya Modern
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(0, 160, canvas.width, 125);
+
+            // Marka Jalan Tengah Putih Bersih
+            ctx.strokeStyle = '#f8fafc';
+            ctx.lineWidth = 4;
+            ctx.setLineDash([30, 20]);
+            ctx.beginPath();
+            ctx.moveTo(0, 220);
+            ctx.lineTo(canvas.width, 220);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Pembatas Garis Kuning Neon
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillRect(0, 280, canvas.width, 5);
+            
+            // Base layer tanah/rumput tua gelap
+            let grassGrad = ctx.createLinearGradient(0, 285, 0, canvas.height);
+            grassGrad.addColorStop(0, '#059669');
+            grassGrad.addColorStop(1, '#064e3b');
+            ctx.fillStyle = grassGrad;
+            ctx.fillRect(0, 285, canvas.width, 75);
+
+            // LAYER RUMPUT 1: Rimbun Belakang (Warna Hijau Mint Cerah)
+            ctx.fillStyle = '#10b981';
+            for (let i = -5; i < canvas.width + 10; i += 8) {
+                let grassHeight = 16 + Math.sin(i * 0.08) * 6; 
+                ctx.beginPath();
+                ctx.moveTo(i, 285);
+                ctx.lineTo(i + 5, 285 - grassHeight);
+                ctx.lineTo(i + 10, 285);
+                ctx.fill();
+            }
+
+            // LAYER RUMPUT 2: Rimbun Depan (Warna Hijau Lebih Muda/Pastel)
+            ctx.fillStyle = '#34d399';
+            for (let i = -2; i < canvas.width + 10; i += 12) {
+                let grassHeight = 12 + Math.cos(i * 0.1) * 4;
+                ctx.beginPath();
+                ctx.moveTo(i, 287);
+                ctx.lineTo(i + 6, 287 - grassHeight);
+                ctx.lineTo(i + 12, 287);
+                ctx.fill();
+            }
+
+            // LAYER RUMPUT 3: Variasi Rumput Liar Panjang Berkelompok
+            ctx.fillStyle = '#6ee7b7';
+            for (let i = 20; i < canvas.width; i += 60) {
+                ctx.beginPath();
+                ctx.moveTo(i, 310); ctx.lineTo(i - 4, 292); ctx.lineTo(i + 2, 310);
+                ctx.moveTo(i + 2, 310); ctx.lineTo(i + 5, 288); ctx.lineTo(i + 8, 310);
+                ctx.fill();
+            }
+
+            // AKSEN TAMBAHAN: Bunga Liar Estetik Kuning Putih Bertebaran
+            for (let i = 40; i < canvas.width; i += 95) {
+                let flowerY = 315 + Math.sin(i) * 12;
+                
+                // Kelopak Putih
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(i - 3, flowerY, 2.5, 0, Math.PI * 2);
+                ctx.arc(i + 3, flowerY, 2.5, 0, Math.PI * 2);
+                ctx.arc(i, flowerY - 3, 2.5, 0, Math.PI * 2);
+                ctx.arc(i, flowerY + 3, 2.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Putik Tengah Oranye/Kuning
+                ctx.fillStyle = '#fbbf24';
+                ctx.beginPath();
+                ctx.arc(i, flowerY, 2.2, 0, Math.PI * 2);
+                ctx.fill();
             }
         }
 
-        // Jalan Raya Aspal
-        ctx.fillStyle = '#333533';
-        ctx.fillRect(0, 200, canvas.width, 110);
-
-        // Garis Pembatas Jalan
-        ctx.strokeStyle = '#ffb703';
-        ctx.lineWidth = 3;
-        ctx.setLineDash([16, 16]);
-        ctx.beginPath();
-        ctx.moveTo(0, 255);
-        ctx.lineTo(canvas.width, 255);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        // Rintangan Batu Karang
-        rocks.forEach(rock => {
-            ctx.fillStyle = '#6c757d';
-            ctx.beginPath();
-            ctx.arc(rock.x, rock.y, rock.radius, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = '#495057';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-        });
-
-        // Makanan (Jagung & Cacing)
-        foods.forEach(food => {
-            if (food.type === 'corn') {
-                ctx.fillStyle = '#ffb703';
-                ctx.beginPath();
-                ctx.arc(food.x, food.y, food.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 1;
-                ctx.stroke();
-            } else {
-                // Cacing
-                ctx.strokeStyle = '#ff70a6';
-                ctx.lineWidth = 3.5;
-                ctx.beginPath();
-                ctx.moveTo(food.x - 5, food.y);
-                ctx.quadraticCurveTo(food.x, food.y - 4, food.x + 5, food.y + 2);
-                ctx.stroke();
-            }
-        });
-    }
-
-    function drawPlayer() {
-        ctx.save();
-        ctx.translate(player.x, player.y);
-        ctx.rotate(player.angle);
-
-        let legMotion = gameRunning && (player.vx !== 0 || player.vy !== 0) ? Math.sin(frameCount * 0.35) * 6 : 0;
-        let headPeck = player.peckAnim > 0 ? 5 : 0;
-
-        // Kaki Ayam
-        ctx.strokeStyle = '#ffb703';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(-2, 8);
-        ctx.lineTo(-2 + legMotion, 16);
-        ctx.moveTo(4, 8);
-        ctx.lineTo(4 - legMotion, 16);
-        ctx.stroke();
-
-        // Badan Utama
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.ellipse(0, 0, 16, 12, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = '#e0e0e0';
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
-        // Sayap
-        ctx.fillStyle = '#f8f9fa';
-        ctx.beginPath();
-        ctx.ellipse(-4, 0, 8, 5, 0.2, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Kepala
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(10 + headPeck, 0, 8, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Paruh
-        ctx.fillStyle = '#ff9f1c';
-        ctx.beginPath();
-        ctx.moveTo(16 + headPeck, -3);
-        ctx.lineTo(24 + headPeck, 0);
-        ctx.lineTo(16 + headPeck, 3);
-        ctx.closePath();
-        ctx.fill();
-
-        // Jengger Red
-        ctx.fillStyle = '#e63946';
-        ctx.beginPath();
-        ctx.arc(10 + headPeck, -8, 3, 0, Math.PI * 2);
-        ctx.arc(13 + headPeck, -7, 2.5, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Mata
-        ctx.fillStyle = '#000';
-        ctx.beginPath();
-        ctx.arc(12 + headPeck, -3, 1.8, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.restore();
-
-        if (player.peckAnim > 0) player.peckAnim--;
-    }
-
-    function drawCars() {
-        cars.forEach(car => {
+        function drawWheel(x, y, radius, angle) {
             ctx.save();
-            ctx.fillStyle = car.color;
-            ctx.fillRect(car.x, car.y, car.width, car.height);
-            // Kaca Mobil
-            ctx.fillStyle = '#a8dede';
-            ctx.fillRect(car.speed > 0 ? car.x + 44 : car.x + 8, car.y + 4, 18, car.height - 8);
-            // Lampu Mobil
-            ctx.fillStyle = '#ffee32';
-            ctx.fillRect(car.speed > 0 ? car.x + car.width - 2 : car.x, car.y + 2, 2, 6);
-            ctx.fillRect(car.speed > 0 ? car.x + car.width - 2 : car.x, car.y + c
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath();
+            ctx.arc(0, 0, radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#e2e8f0';
+            ctx.beginPath();
+            ctx.arc(0, 0, radius * 0.45, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(-radius, 0); ctx.lineTo(radius, 0);
+            ctx.moveTo(0, -radius); ctx.lineTo(0, radius);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function checkCollision(rect1, rect2) {
+            const paddingX = 8;
+            const paddingY = 5;
+            return rect1.x < rect2.x + rect2.width - paddingX &&
+                   rect1.x + rect1.width > rect2.x + paddingX &&
+                   rect1.y < rect2.y + rect2.height - paddingY &&
+                   rect1.y + rect1.height > rect2.y + paddingY;
+        }
+
+        function updateLevelSystem() {
+            currentLevel = Math.floor(score / 10) + 1;
+            vehicleSpeed = baseSpeed + (currentLevel - 1) * 0.75;
+        }
+
+        function resetGame() {
+            vehicles = [];
+            score = 0;
+            currentLevel = 1;
+            vehicleSpeed = baseSpeed;
+            gameActive = true;
+            loop();
+        }
+
+        function loop() {
+            if (!gameActive) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawEnvironment();
+
+            pitik.update();
+            pitik.draw();
+
+            updateLevelSystem();
+            wheelAngle -= 0.18;
+
+            spawnTimer++;
+            let dynamicInterval = Math.max(45, 90 - (currentLevel * 4));
+            if (spawnTimer > Math.random() * (dynamicInterval + 30) + dynamicInterval) {
+                spawnVehicle();
+                spawnTimer = 0;
+            }
+
+            for (let i = vehicles.length - 1; i >= 0; i--) {
+                let v = vehicles[i];
+                v.x -= v.speed;
+
+                ctx.fillStyle = v.color;
+
+                if (v.type === 'sedan') {
+                    ctx.fillRect(v.x, v.y + 12, v.width, v.height - 12);
+                    ctx.beginPath();
+                    ctx.moveTo(v.x + 15, v.y + 12);
+                    ctx.lineTo(v.x + 32, v.y);
+                    ctx.lineTo(v.x + 65, v.y);
+                    ctx.lineTo(v.x + 76, v.y + 12);
+                    ctx.fill();
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+                    ctx.fillRect(v.x + 35, v.y + 3, 25, 7);
+                    ctx.fillStyle = '#ffea00';
+                    ctx.fillRect(v.x, v.y + 16, 6, 7);
+
+                    drawWheel(v.x + 18, v.y + v.height - 2, 8.5, wheelAngle);
+                    drawWheel(v.x + v.width - 18, v.y + v.height - 2, 8.5, wheelAngle);
+
+                } else if (v.type === 'truck') {
+                    ctx.fillStyle = '#f1f5f9';
+                    ctx.fillRect(v.x + 35, v.y, v.width - 35, v.height - 4);
+                    ctx.fillStyle = 'rgba(52, 211, 153, 0.2)';
+                    ctx.fillRect(v.x + 40, v.y + 5, v.width - 45, v.height - 15);
+
+                    ctx.fillStyle = v.color;
+                    ctx.fillRect(v.x, v.y + 12, 35, v.height - 16);
+                    ctx.fillStyle = 'rgba(30, 41, 59, 0.7)';
+                    ctx.fillRect(v.x + 2, v.y + 16, 16, 12);
+                    ctx.fillStyle = '#e11d48';
+                    ctx.fillRect(v.x + v.width - 5, v.y + v.height - 15, 5, 8);
+
+                    drawWheel(v.x + 16, v.y + v.height - 4, 11, wheelAngle);
+                    drawWheel(v.x + v.width - 38, v.y + v.height - 4, 11, wheelAngle);
+                    drawWheel(v.x + v.width - 16, v.y + v.height - 4, 11, wheelAngle);
+
+                } else if (v.type === 'motor') {
+                    ctx.beginPath();
+                    ctx.moveTo(v.x, v.y + 8); 
+                    ctx.lineTo(v.x + 15, v.y + 15); 
+                    ctx.lineTo(v.x + 38, v.y + 15); 
+                    ctx.lineTo(v.x + v.width, v.y + v.height - 8);
+                    ctx.lineTo(v.x, v.y + v.height - 4);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.fillRect(v.x, v.y + 12, 5, 5);
+
+                    drawWheel(v.x + 8, v.y + v.height - 2, 7.5, wheelAngle);
+                    drawWheel(v.x + v.width - 8, v.y + v.height - 2, 7.5, wheelAngle);
+                }
+
+                if (checkCollision(pitik, v)) {
+                    gameActive = false;
+                }
+
+                if (v.x + v.width < 0) {
+                    vehicles.splice(i, 1);
+                    score++;
+                }
+            }
+
+            ctx.shadowColor = 'rgba(0,0,0,0.3)';
+            ctx.shadowBlur = 4;
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 17px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText('🏆 SKOR PERMAINAN: ' + score, 30, 38);
+            ctx.shadowBlur = 0; 
+            
+            let hue = Math.max(0, 140 - (currentLevel * 9));
+            ctx.fillStyle = `hsl(${hue}, 85%, 45%)`;
+            ctx.beginPath();
+            ctx.roundRect(30, 52, 120, 28, 8);
+            ctx.fill();
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 13px "Plus Jakarta Sans", sans-serif';
+            ctx.fillText('⚡ LEVEL: ' + currentLevel, 45, 71);
+
+            if (gameActive) {
+                requestAnimationFrame(loop);
+            } else {
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#ef4444';
+                ctx.font = 'bold 32px "Plus Jakarta Sans", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('KASIAN, PITIKNYA TERTABRAK! 💥', canvas.width / 2, canvas.height / 2 - 15);
+                
+                ctx.fillStyle = '#f8fafc';
+                ctx.font = '600 16px "Plus Jakarta Sans", sans-serif';
+                ctx.fillText('Kamu Bertahan Sampai Level ' + currentLevel + ' dengan Skor ' + score, canvas.width / 2, canvas.height / 2 + 25);
+                
+                ctx.fillStyle = '#fbbf24';
+                ctx.font = '500 14px "Plus Jakarta Sans", sans-serif';
+                ctx.fillText('Tekan SPASI / KLIK Area Game untuk Mencoba Kembali', canvas.width / 2, canvas.height / 2 + 60);
+                ctx.textAlign = 'left';
+            }
+        }
+
+        window.addEventListener('keydown', function(e) {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                pitik.jump();
+         
